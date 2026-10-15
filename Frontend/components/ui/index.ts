@@ -1,5 +1,5 @@
 // =====================================================
-// UI Components Index - Smart Maize Farming System
+// UI Components Index - RwandaBeyond Agri-Business
 // Export all UI components from a single entry point
 // =====================================================
 
@@ -11,11 +11,11 @@ export { Badge, type BadgeProps } from './Badge';
 
 // Dashboard Components
 export { DashboardHeader } from './DashboardHeader';
-export { StatsCard, StatsGrid, FeaturedStats } from './StatsCard';
-export { AlertCard, AlertList, Toast } from './AlertCard';
-export { SensorCard, SensorGrid, SensorSummary } from './SensorCard';
+export { StatsCard } from './StatsCard';
+export { AlertCard } from './AlertCard';
+export { SensorCard } from './SensorCard';
 export { WeatherCard } from './WeatherCard';
-export { FarmCard, FarmGrid } from './FarmCard';
+export { FarmCard } from './FarmCard';
 
 // Loading States
 export { Spinner, LoadingOverlay, LoadingState, FullPageLoading, ErrorState, EmptyState } from './Spinner';

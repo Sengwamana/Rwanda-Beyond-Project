@@ -531,19 +531,19 @@ export const VoiceAssistant: React.FC = () => {
       )}
 
       {isSessionActive && (
-        <div className="w-[22rem] rounded-[1.75rem] border border-[#9BC53D]/20 bg-[radial-gradient(circle_at_top,#3f7d35,#20461d_60%,#163214)] text-white shadow-lg mb-2 animate-slide-up overflow-hidden">
+        <div className="w-[22rem] rounded-lg border border-primary/20 bg-gradient-to-b from-primary-hover to-[#163214] text-white shadow-lg mb-2 animate-slide-up overflow-hidden">
           <div className="px-4 py-4 border-b border-white/10 bg-white/5 backdrop-blur-md">
             <div className="flex justify-between items-center">
               <span className="font-semibold flex items-center gap-2 tracking-tight">
                 <Sparkles className="h-4 w-4 text-yellow-300" />
                 Keza Voice
               </span>
-              <button onClick={cleanupSession} className="hover:bg-white/20 rounded-full p-1">
+              <button onClick={cleanupSession} className="hover:bg-white/20 rounded-sm p-1">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="mt-2 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-green-100/80">
-              <span className={`inline-block h-2 w-2 rounded-full ${isListening ? 'bg-emerald-300' : isProcessing ? 'bg-yellow-300' : 'bg-white/40'}`} />
+              <span className={`inline-block h-2 w-2 rounded-sm ${isListening ? 'bg-emerald-300' : isProcessing ? 'bg-yellow-300' : 'bg-white/40'}`} />
               {isSpeaking ? 'Speaking' : isProcessing ? 'Responding' : isListening ? 'Listening' : 'Ready'}
             </div>
           </div>
@@ -607,7 +607,7 @@ export const VoiceAssistant: React.FC = () => {
                 <button
                   onClick={handleManualSubmit}
                   disabled={!textPrompt.trim() || isProcessing}
-                  className="h-10 w-10 rounded-xl bg-[#9BC53D] text-[#163214] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-10 w-10 rounded-md bg-accent text-slate-900 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Send question"
                 >
                   <Send className="h-4 w-4" />
@@ -616,9 +616,9 @@ export const VoiceAssistant: React.FC = () => {
             </div>
 
             <div className="flex gap-1 justify-center h-4 items-center">
-              <div className={`w-1 ${isListening ? 'bg-white/80' : 'bg-white/30'} h-2 rounded-full`} />
-              <div className={`w-1 ${isProcessing ? 'bg-yellow-300 animate-pulse' : 'bg-white/60'} h-4 rounded-full`} />
-              <div className={`w-1 ${isListening ? 'bg-white/80' : 'bg-white/30'} h-2 rounded-full`} />
+              <div className={`w-1 ${isListening ? 'bg-white/80' : 'bg-white/30'} h-2 rounded-sm`} />
+              <div className={`w-1 ${isProcessing ? 'bg-yellow-300 animate-pulse' : 'bg-white/60'} h-4 rounded-sm`} />
+              <div className={`w-1 ${isListening ? 'bg-white/80' : 'bg-white/30'} h-2 rounded-sm`} />
             </div>
           </div>
         </div>
@@ -627,8 +627,8 @@ export const VoiceAssistant: React.FC = () => {
       <button
         onClick={isSessionActive ? cleanupSession : startSession}
         disabled={isProcessing && !isSessionActive}
-        className={`h-14 w-14 rounded-full shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-105 ${
-          isSessionActive ? 'bg-red-500 hover:bg-red-600' : 'bg-[#0F5132] hover:bg-[#0a3621]'
+        className={`h-14 w-14 rounded-md shadow-md hover:shadow-lg flex items-center justify-center transition-all duration-200 transform hover:scale-105 ${
+          isSessionActive ? 'bg-danger hover:bg-danger/90' : 'bg-primary hover:bg-primary-hover'
         } text-white`}
         aria-label="Toggle Voice Assistant"
       >

@@ -36,11 +36,11 @@ interface MapboxMapProps {
 }
 
 const toneStyles: Record<MapboxMarkerTone, { fill: string; glow: string }> = {
-  default: { fill: '#0f766e', glow: 'rgba(15, 118, 110, 0.22)' },
-  danger: { fill: '#dc2626', glow: 'rgba(220, 38, 38, 0.24)' },
-  warning: { fill: '#d97706', glow: 'rgba(217, 119, 6, 0.24)' },
-  success: { fill: '#059669', glow: 'rgba(5, 150, 105, 0.24)' },
-  info: { fill: '#2563eb', glow: 'rgba(37, 99, 235, 0.24)' },
+  default: { fill: '#1F5130', glow: 'rgba(31, 81, 48, 0.22)' },
+  danger: { fill: '#B3392F', glow: 'rgba(179, 57, 47, 0.24)' },
+  warning: { fill: '#E0A526', glow: 'rgba(224, 165, 38, 0.24)' },
+  success: { fill: '#2E7D4F', glow: 'rgba(46, 125, 79, 0.24)' },
+  info: { fill: '#2B6F8F', glow: 'rgba(43, 111, 143, 0.24)' },
 };
 
 function isValidCoordinate(latitude: number, longitude: number) {
@@ -50,7 +50,7 @@ function isValidCoordinate(latitude: number, longitude: number) {
 function createPopupContent(marker: MapboxMarkerData) {
   const wrapper = document.createElement('div');
   wrapper.style.minWidth = '180px';
-  wrapper.style.color = '#0f172a';
+  wrapper.style.color = '#1E2A22';
 
   const title = document.createElement('p');
   title.textContent = marker.label;
@@ -65,7 +65,7 @@ function createPopupContent(marker: MapboxMarkerData) {
     badge.style.margin = '6px 0 0';
     badge.style.fontSize = '11px';
     badge.style.fontWeight = '600';
-    badge.style.color = '#047857';
+    badge.style.color = '#1F5130';
     wrapper.appendChild(badge);
   }
 
@@ -75,7 +75,7 @@ function createPopupContent(marker: MapboxMarkerData) {
     description.style.margin = '8px 0 0';
     description.style.fontSize = '12px';
     description.style.lineHeight = '1.4';
-    description.style.color = '#475569';
+    description.style.color = '#5F6B62';
     wrapper.appendChild(description);
   }
 
@@ -83,7 +83,7 @@ function createPopupContent(marker: MapboxMarkerData) {
   coordinates.textContent = `${marker.latitude.toFixed(4)}, ${marker.longitude.toFixed(4)}`;
   coordinates.style.margin = '8px 0 0';
   coordinates.style.fontSize = '11px';
-  coordinates.style.color = '#64748b';
+  coordinates.style.color = '#8FA396';
   wrapper.appendChild(coordinates);
 
   return wrapper;
@@ -95,7 +95,7 @@ function createMarkerElement(marker: MapboxMarkerData, selected: boolean) {
   element.setAttribute('aria-label', marker.label);
   element.style.width = selected ? '22px' : '18px';
   element.style.height = selected ? '22px' : '18px';
-  element.style.borderRadius = '999px';
+  element.style.borderRadius = '4px';
   element.style.border = '2px solid white';
   element.style.cursor = 'pointer';
   element.style.boxShadow = `0 0 0 ${selected ? '8px' : '5px'} ${toneStyles[marker.tone || 'default'].glow}`;
@@ -235,9 +235,9 @@ export function MapboxMap({
 
   if (!hasToken) {
     return (
-      <div className={cn('dash-dashed-block space-y-3 rounded-[24px] p-5', className)}>
+      <div className={cn('dash-dashed-block space-y-3 rounded-lg p-5', className)}>
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 dark:bg-slate-900/70 dark:text-slate-300">
+          <div className="flex h-11 w-11 items-center justify-center rounded-md bg-slate-100 text-slate-500 dark:bg-slate-900/70 dark:text-slate-300">
             <MapPin size={18} />
           </div>
           <div className="space-y-1">
@@ -263,7 +263,7 @@ export function MapboxMap({
 
   if (validMarkers.length === 0 && !onCoordinateSelect) {
     return (
-      <div className={cn('dash-dashed-block rounded-[24px] p-6 text-center', className)}>
+      <div className={cn('dash-dashed-block rounded-lg p-6 text-center', className)}>
         <p className="font-semibold text-slate-900 dark:text-white">{emptyTitle}</p>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{emptyMessage}</p>
       </div>
@@ -271,12 +271,12 @@ export function MapboxMap({
   }
 
   return (
-    <div className={cn('overflow-hidden rounded-[24px] border border-[hsl(var(--border))] bg-white/95 shadow-[0_28px_60px_rgba(15,23,42,0.08)] dark:bg-slate-950/95', className)}>
+    <div className={cn('overflow-hidden rounded-lg border border-border bg-white/95 shadow-sm dark:bg-slate-950/95', className)}>
       <div
         ref={mapContainerRef}
         className={cn('h-[340px] w-full', mapClassName)}
       />
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[hsl(var(--border))] bg-slate-50/80 px-4 py-3 text-xs text-slate-500 dark:bg-slate-900/70 dark:text-slate-400">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-slate-50/80 px-4 py-3 text-xs text-slate-500 dark:bg-slate-900/70 dark:text-slate-400">
         <span>
           {onCoordinateSelect
             ? 'Click anywhere on the map to place or update coordinates.'

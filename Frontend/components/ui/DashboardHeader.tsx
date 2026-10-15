@@ -1,6 +1,5 @@
 // =====================================================
-// Dashboard Header Component - Smart Maize Farming System
-// Modern, SmartTani-inspired header for dashboard pages
+// Dashboard Header Component - RwandaBeyond Agri-Business
 // =====================================================
 
 import React from 'react';
@@ -62,7 +61,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-6 py-4">
+    <header className="bg-white dark:bg-card border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Left: Title & Subtitle */}
         <div className="flex-1">
@@ -70,7 +69,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             {title}
           </h1>
           {subtitle && (
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               {subtitle}
             </p>
           )}
@@ -86,7 +85,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 placeholder="Search farms, sensors, reports..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F5132]/20 focus:border-[#0F5132]/50 transition-colors"
+                className="w-full pl-11 pr-4 py-2.5 rounded-md bg-white dark:bg-card border border-border text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-colors"
               />
             </div>
           </form>
@@ -95,14 +94,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {/* Right: Actions */}
         <div className="flex items-center gap-3">
           {/* Language Switcher */}
-          <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-medium">
+          <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-md bg-white dark:bg-card border border-border text-xs font-medium">
             {['en', 'rw', 'fr'].map((lang) => (
               <button
                 key={lang}
                 onClick={() => onLanguageChange(lang as Language)}
-                className={`px-2 py-1 rounded-md transition-colors ${
+                className={`px-2 py-1 rounded-sm transition-colors ${
                   language === lang
-                    ? 'bg-[#0F5132] text-white'
+                    ? 'bg-primary text-white'
                     : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                 }`}
               >
@@ -114,7 +113,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Theme Toggle */}
           <button
             onClick={onToggleTheme}
-            className="p-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="p-2.5 rounded-md bg-white dark:bg-card border border-border text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -123,12 +122,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Notifications */}
           <button
             onClick={onNotificationClick}
-            className="relative p-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            className="relative p-2.5 rounded-md bg-white dark:bg-card border border-border text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             aria-label="Notifications"
           >
             <Bell size={18} />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-danger text-white text-[10px] font-bold rounded-sm flex items-center justify-center animate-pulse">
                 {notificationCount > 9 ? '9+' : notificationCount}
               </span>
             )}
@@ -138,9 +137,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-3 px-3 py-2 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-3 px-3 py-2 rounded-md bg-white dark:bg-card border border-border hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-[#0F5132] overflow-hidden flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md bg-primary overflow-hidden flex items-center justify-center">
                 {userAvatar ? (
                   <img src={userAvatar} alt={userName} className="w-full h-full object-cover" />
                 ) : (
@@ -165,8 +164,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
             {/* Profile Dropdown Menu */}
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50 animate-fade-in">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-card rounded-md shadow-lg border border-border py-2 z-50 animate-fade-in">
+                <div className="px-4 py-3 border-b border-border">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">{userName}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">{roleLabels[userRole]}</p>
                 </div>
@@ -195,10 +194,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   </button>
                 </div>
 
-                <div className="border-t border-slate-100 dark:border-slate-700 pt-1">
+                <div className="border-t border-border pt-1">
                   <button
                     onClick={() => { onLogout?.(); setIsProfileOpen(false); }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-danger hover:bg-danger-tint transition-colors"
                   >
                     <LogOut size={16} />
                     Sign Out

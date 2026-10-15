@@ -309,7 +309,7 @@ function AppRoutes({ authEnabled }: { authEnabled: boolean }) {
       )}
 
       {/* Main Content */}
-      <main className={`flex-1 ${showNavbar ? 'pt-0' : ''}`}>
+      <main className={`flex-1 ${showNavbar ? 'pt-20' : ''}`}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage onLogin={handleLogin} onNavigate={handleNavigate} language={language} />} />

@@ -1,6 +1,5 @@
 // =====================================================
-// Stats Card Component - Smart Maize Farming System
-// Reusable stats card with various display variants
+// Stats Card Component - RwandaBeyond Agri-Business
 // =====================================================
 
 import React from 'react';
@@ -29,15 +28,14 @@ export const StatsCard: React.FC<StatsCardProps> = ({
   value,
   subtitle,
   icon: Icon,
-  iconColor = 'text-green-600',
-  iconBgColor = 'bg-green-100 dark:bg-green-900/30',
+  iconColor = 'text-primary',
+  iconBgColor = 'bg-primary-tint dark:bg-primary/15',
   trend,
   variant = 'default',
   size = 'md',
   className = '',
   onClick
 }) => {
-  // Size configurations
   const sizeConfig = {
     sm: {
       padding: 'p-4',
@@ -67,32 +65,30 @@ export const StatsCard: React.FC<StatsCardProps> = ({
 
   const config = sizeConfig[size];
 
-  // Variant configurations
   const variantClasses = {
-    default: 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm',
-    gradient: 'bg-[#0F5132] text-white border-0 shadow-sm',
-    outline: 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800',
-    minimal: 'bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800'
+    default: 'bg-white dark:bg-card border border-border shadow-sm',
+    gradient: 'bg-primary text-white border-0 shadow-sm',
+    outline: 'bg-white dark:bg-card border border-border',
+    minimal: 'bg-muted border border-border'
   };
 
   const isGradient = variant === 'gradient';
 
-  // Trend icon
-  const TrendIcon = trend 
+  const TrendIcon = trend
     ? (trend.value > 0 ? TrendingUp : trend.value < 0 ? TrendingDown : Minus)
     : null;
 
   const trendColor = trend
-    ? (trend.isPositive !== undefined 
-        ? (trend.isPositive ? 'text-green-500' : 'text-red-500')
-        : (trend.value > 0 ? 'text-green-500' : trend.value < 0 ? 'text-red-500' : 'text-slate-400'))
+    ? (trend.isPositive !== undefined
+        ? (trend.isPositive ? 'text-success' : 'text-danger')
+        : (trend.value > 0 ? 'text-success' : trend.value < 0 ? 'text-danger' : 'text-muted-foreground'))
     : '';
 
   return (
     <div
       onClick={onClick}
       className={`
-        rounded-[1.25rem] transition-all duration-200
+        rounded-lg transition-all duration-200
         ${config.padding}
         ${variantClasses[variant]}
         ${onClick ? 'cursor-pointer hover:shadow-md' : ''}
@@ -104,11 +100,11 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           <p className={`
             font-medium mb-2
             ${config.titleSize}
-            ${isGradient ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}
+            ${isGradient ? 'text-white/80' : 'text-muted-foreground'}
           `}>
             {title}
           </p>
-          
+
           <p className={`
             font-bold leading-none
             ${config.valueSize}
@@ -117,7 +113,6 @@ export const StatsCard: React.FC<StatsCardProps> = ({
             {value}
           </p>
 
-          {/* Trend & Subtitle */}
           <div className="flex items-center gap-2 mt-2">
             {trend && TrendIcon && (
               <span className={`
@@ -132,7 +127,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({
             {(subtitle || trend?.label) && (
               <span className={`
                 ${config.subtitleSize}
-                ${isGradient ? 'text-white/70' : 'text-slate-400 dark:text-slate-500'}
+                ${isGradient ? 'text-white/70' : 'text-muted-foreground'}
               `}>
                 {trend?.label || subtitle}
               </span>
@@ -140,82 +135,19 @@ export const StatsCard: React.FC<StatsCardProps> = ({
           </div>
         </div>
 
-        {/* Icon */}
         {Icon && (
           <div className={`
             ${config.iconContainer}
             ${isGradient ? 'bg-white/20' : iconBgColor}
-            rounded-2xl flex items-center justify-center flex-shrink-0
+            rounded-md flex items-center justify-center flex-shrink-0
           `}>
-            <Icon 
-              size={config.iconSize} 
+            <Icon
+              size={config.iconSize}
               className={isGradient ? 'text-white' : iconColor}
             />
           </div>
         )}
       </div>
-    </div>
-  );
-};
-
-// =====================================================
-// Stats Card Grid - Helper for displaying multiple stats
-// =====================================================
-
-interface StatsGridProps {
-  children: React.ReactNode;
-  columns?: 2 | 3 | 4;
-  className?: string;
-}
-
-export const StatsGrid: React.FC<StatsGridProps> = ({
-  children,
-  columns = 4,
-  className = ''
-}) => {
-  const gridClasses = {
-    2: 'grid-cols-1 sm:grid-cols-2',
-    3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-  };
-
-  return (
-    <div className={`grid gap-4 ${gridClasses[columns]} ${className}`}>
-      {children}
-    </div>
-  );
-};
-
-// =====================================================
-// Featured Stats Card - Large hero-style stat display
-// =====================================================
-
-interface FeaturedStatsProps {
-  stats: Array<{
-    value: string;
-    label: string;
-    suffix?: string;
-  }>;
-  className?: string;
-}
-
-export const FeaturedStats: React.FC<FeaturedStatsProps> = ({
-  stats,
-  className = ''
-}) => {
-  return (
-    <div className={`grid grid-cols-1 sm:grid-cols-3 gap-8 ${className}`}>
-      {stats.map((stat, index) => (
-        <div key={index} className="text-center">
-          <p className="text-4xl md:text-5xl font-bold text-green-600 dark:text-green-400 mb-2">
-            {stat.value}
-            {stat.suffix && <span className="text-2xl">{stat.suffix}</span>}
-          </p>
-          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            {stat.label}
-          </p>
-        </div>
-      ))}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 // Navbar Component - Smart Maize Farming System
 // =====================================================
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Sun, Moon } from 'lucide-react';
 import { Button } from './ui/Button';
 import { BrandLogo } from './ui/BrandLogo';
@@ -26,7 +26,49 @@ export function Navbar({
   currentPath 
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const t = translations[language].nav;
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [currentPath]);
+
+  // Handle scroll state for navbar styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
+
+  // Close mobile menu on Escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    if (isMobileMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isMobileMenuOpen]);
 
   const navigate = (page: string) => {
     onNavigate(page);
@@ -46,7 +88,7 @@ export function Navbar({
   };
 
   return (
-    <nav className="fixed w-full z-50 transition-all duration-300 bg-background/90 backdrop-blur-md border-b">
+    <nav className={`fixed w-full z-50 transition-all duration-300 backdrop-blur-md border-b border-border ${isScrolled ? 'bg-background/95 shadow-sm' : 'bg-background/70'}`}>
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         
         {/* Logo */}
@@ -126,7 +168,7 @@ export function Navbar({
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 w-full bg-background border-b p-6 flex flex-col gap-4 shadow-xl animate-fade-in z-40">
+        <div ref={mobileMenuRef} className="md:hidden absolute top-20 left-0 w-full bg-background border-b p-6 flex flex-col gap-4 shadow-xl animate-fade-in z-40">
           <Button variant="ghost" className="justify-start text-lg" onClick={() => navigate('landing')}>
             {t.home}
           </Button>

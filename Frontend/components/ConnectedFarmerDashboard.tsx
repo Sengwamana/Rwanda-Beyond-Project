@@ -257,15 +257,15 @@ function SensorCard({
   trend?: 'up' | 'down' | 'stable';
 }) {
   const statusColors = {
-    normal: 'text-green-500',
-    warning: 'text-green-500',
-    critical: 'text-red-500',
+    normal: 'text-success border-l-success',
+    warning: 'text-warning border-l-warning',
+    critical: 'text-danger border-l-danger',
   };
 
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null;
 
   return (
-    <Card className="dash-stat-card">
+    <Card className="dash-stat-card border-l-4">
       <CardContent className="p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -274,14 +274,14 @@ function SensorCard({
             </div>
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
-              <p className="text-[1.85rem] font-extrabold tracking-tight">
+              <p className="text-[1.85rem] font-bold tracking-tight">
                 {value}
                 <span className="text-sm font-medium text-muted-foreground ml-1">{unit}</span>
               </p>
             </div>
           </div>
           {TrendIcon && (
-            <TrendIcon size={16} className={trend === 'up' ? 'text-green-500' : 'text-red-500'} />
+            <TrendIcon size={16} className={trend === 'up' ? 'text-success' : 'text-danger'} />
           )}
         </div>
       </CardContent>
@@ -701,10 +701,10 @@ function FarmSelector({
         <button
           key={farm.id}
           onClick={() => onSelect(farm)}
-          className={`flex-shrink-0 rounded-[1.2rem] border px-4 py-3 text-left transition-all ${
+          className={`flex-shrink-0 rounded-md border px-4 py-3 text-left transition-all ${
             selectedFarm?.id === farm.id
-              ? 'border-primary bg-primary text-primary-foreground shadow-[0_18px_34px_-24px_rgba(15,81,50,0.65)]'
-              : 'border-[hsl(var(--border))] bg-white dark:bg-slate-900 hover:border-primary/30 hover:bg-[hsl(var(--secondary))]'
+              ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+              : 'border-border bg-white dark:bg-card hover:border-primary/30 hover:bg-muted'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -1867,16 +1867,16 @@ export function ConnectedFarmerDashboard({
                 <span className={`text-[13px] font-semibold ${index === 0 ? 'text-white/88' : 'text-slate-600 dark:text-slate-300'}`}>
                   {stat.label}
                 </span>
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full ${index === 0 ? 'bg-white text-primary' : 'border border-[hsl(var(--border))] bg-[hsl(var(--secondary))] dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>
+                <div className={`flex items-center justify-center w-10 h-10 rounded-md ${index === 0 ? 'bg-white text-primary' : 'border border-border bg-muted dark:bg-slate-800 text-slate-700 dark:text-slate-200'}`}>
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
               </div>
               <div className="flex flex-col mt-6">
-                <span className={`text-[2.55rem] font-extrabold tracking-tight ${index === 0 ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
+                <span className={`text-[2.55rem] font-bold tracking-tight ${index === 0 ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
                   {stat.value}
                 </span>
                 <div className="mt-4 flex items-center gap-2">
-                  <div className={`flex items-center justify-center px-2 py-1 rounded-full text-[10px] font-bold ${index === 0 ? 'bg-white/15 text-white' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'}`}>
+                  <div className={`flex items-center justify-center px-2 py-1 rounded-sm text-[10px] font-bold ${index === 0 ? 'bg-white/15 text-white' : 'bg-primary-tint text-primary dark:bg-primary/20'}`}>
                     {stat.badge}
                   </div>
                   <span className={`text-[11px] font-medium ${index === 0 ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>{stat.helper}</span>
@@ -2011,7 +2011,7 @@ export function ConnectedFarmerDashboard({
                     <div className="dash-metric-tile dash-metric-tile-accent relative flex min-h-[130px] flex-col justify-between p-4 sm:p-5">
                       <div className="flex justify-between items-start">
                         <p className="text-[15px] font-medium text-white/90">Registered Farms</p>
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
+                        <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
                           <TrendingUp size={16} className="text-primary" />
                         </div>
                       </div>
@@ -2021,7 +2021,7 @@ export function ConnectedFarmerDashboard({
                     <div className="dash-metric-tile relative flex min-h-[130px] flex-col justify-between p-4 sm:p-5">
                       <div className="flex justify-between items-start">
                         <p className="text-[15px] font-medium text-slate-800 dark:text-slate-200">Active Farms</p>
-                        <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
+                        <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
                           <TrendingUp size={16} className="text-slate-600 dark:text-slate-400" />
                         </div>
                       </div>
@@ -2031,7 +2031,7 @@ export function ConnectedFarmerDashboard({
                     <div className="dash-metric-tile relative flex min-h-[130px] flex-col justify-between p-4 sm:p-5">
                       <div className="flex justify-between items-start">
                         <p className="text-[15px] font-medium text-slate-800 dark:text-slate-200">Total Area (ha)</p>
-                        <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
+                        <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
                           <TrendingUp size={16} className="text-slate-600 dark:text-slate-400" />
                         </div>
                       </div>
@@ -2043,7 +2043,7 @@ export function ConnectedFarmerDashboard({
                     <div className="dash-metric-tile relative flex min-h-[130px] flex-col justify-between p-4 sm:p-5">
                       <div className="flex justify-between items-start">
                         <p className="text-[15px] font-medium text-slate-800 dark:text-slate-200">Average Size (ha)</p>
-                        <div className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
+                        <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center shrink-0 -mt-1 -mr-1 cursor-pointer transition-transform hover:scale-105">
                           <TrendingUp size={16} className="text-slate-600 dark:text-slate-400" />
                         </div>
                       </div>
@@ -2871,8 +2871,8 @@ export function ConnectedFarmerDashboard({
                         : 'You are all caught up. Check back later for new insights.'
                     }
                     icon={
-                      <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-full">
-                        <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                      <div className="bg-success-tint p-3 rounded-md">
+                        <CheckCircle className="h-6 w-6 text-success" />
                       </div>
                     }
                   />

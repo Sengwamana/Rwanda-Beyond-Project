@@ -49,7 +49,7 @@ const centeredMetricTileClass = 'dash-metric-tile text-center min-h-[112px] flex
 const outlineBlockClass = 'dash-outline-block';
 
 const getResourceIcon = (resource: ResourceKind) => (
-  resource === 'irrigation' ? <Droplets size={18} className="text-primary" /> : <Sprout size={18} className="text-primary" />
+  resource === 'irrigation' ? <Droplets size={18} className="text-info" /> : <Sprout size={18} className="text-primary" />
 );
 
 const getResourceUnit = (resource: ResourceKind) => (resource === 'irrigation' ? 'L' : 'kg');
@@ -299,7 +299,7 @@ export function ScheduleInsightsPanel({
                         formatter={(value: number) => [formatNumber(Number(value), resource), 'Usage']}
                         labelFormatter={(label) => `${label}`}
                       />
-                      <Bar dataKey="value" fill={resource === 'irrigation' ? '#059669' : '#65a30d'} radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="value" fill={resource === 'irrigation' ? '#2B6F8F' : '#1F5130'} radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

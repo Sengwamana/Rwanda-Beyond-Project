@@ -22,19 +22,19 @@ const ConnectedAdminDashboard = lazy(() =>
 );
 
 const DashboardContentSkeleton: React.FC<{ role: UserRole }> = ({ role }) => {
-  const _role = role; // keep param usage
+  const _role = role;
 
   return (
   <div className="space-y-5 animate-pulse">
     <div className="dash-hero-panel">
       <div className="h-3 w-40 rounded-full bg-slate-200 dark:bg-slate-700 mb-3" />
-      <div className="h-8 w-64 rounded-xl bg-slate-200 dark:bg-slate-700 mb-3" />
+      <div className="h-8 w-64 rounded-md bg-slate-200 dark:bg-slate-700 mb-3" />
       <div className="h-3 w-5/6 max-w-xl rounded-full bg-slate-200 dark:bg-slate-700" />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
         {Array.from({ length: 4 }).map((_, index) => (
           <div key={`dash-skeleton-kpi-${index}`} className="dash-kpi-card">
             <div className="h-2.5 w-16 rounded-full bg-slate-200 dark:bg-slate-700 mb-2" />
-            <div className="h-6 w-12 rounded-lg bg-slate-200 dark:bg-slate-700" />
+            <div className="h-6 w-12 rounded-md bg-slate-200 dark:bg-slate-700" />
           </div>
         ))}
       </div>
@@ -53,7 +53,7 @@ const DashboardContentSkeleton: React.FC<{ role: UserRole }> = ({ role }) => {
       ))}
     </div>
   </div>
-  );
+);
 };
 
 interface DashboardProps {
@@ -92,7 +92,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
   
   const t = translations[language].dashboard;
 
-  // Reset active tab when role changes to avoid getting stuck on a non-existent tab
   useEffect(() => {
     if (typeof window === 'undefined') {
       setActiveTab('overview');
@@ -119,7 +118,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
     setShowMobileSearch(false);
   }, [userRole]);
 
-  // Define Navigation Items based on Role
   const getNavItems = (role: UserRole): NavItemConfig[] => {
     const common = [
       { id: 'settings', label: t.settings, icon: SettingsIcon, section: 'Account' },
@@ -214,7 +212,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
 
-  // Role-based Label helpers
   const getRoleLabel = (role: UserRole) => {
     if (role === 'admin') return 'System Administrator';
     if (role === 'expert') return 'Agricultural Expert';
@@ -308,13 +305,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
         : 'Live data connected';
   const activeNavItem = navItems.find((item) => item.id === activeTab);
   const ActiveTabIcon = activeNavItem?.icon || LayoutGrid;
-  const roleTheme = userRole === 'expert' ? { dot: 'bg-green-500' } : { dot: 'bg-emerald-500' };
+  const roleTheme = userRole === 'expert' ? { dot: 'bg-success' } : { dot: 'bg-primary' };
   const rolePillClass =
     userRole === 'admin'
-      ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/20'
+      ? 'bg-primary/15 text-primary border-primary/20'
       : userRole === 'expert'
-        ? 'bg-green-500/15 text-green-700 dark:text-green-300 border-green-500/20'
-        : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/20';
+        ? 'bg-success/15 text-success border-success/20'
+        : 'bg-primary/15 text-primary border-primary/20';
   const persistedMessages = notificationsQuery.data?.messages || [];
   const messageUnreadCount = notificationsQuery.data?.unreadCount || 0;
   const totalUnreadCount = unreadCount + messageUnreadCount;
@@ -364,13 +361,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
         setShowAlerts(false);
       }}
       title={compactSidebar ? label : undefined}
-      className={`relative w-[calc(100%-20px)] mx-2.5 flex ${compactSidebar ? 'flex-col justify-center px-2 py-3 mt-1.5' : 'items-center gap-3.5 px-4 py-3.5 my-1.5'} rounded-[1.25rem] transition-all duration-200 text-[15px] group ${
+      className={`relative w-[calc(100%-20px)] mx-2.5 flex ${compactSidebar ? 'flex-col justify-center px-2 py-3 mt-1.5' : 'items-center gap-3.5 px-4 py-3 my-1.5'} rounded-md transition-all duration-200 text-[15px] group ${
         activeTab === id
-          ? 'bg-emerald-50 dark:bg-emerald-950/40 text-primary dark:text-emerald-300 font-semibold border border-emerald-100 dark:border-emerald-900/50 shadow-[0_14px_24px_-22px_rgba(27,107,70,0.45)]'
-          : 'text-slate-500 hover:bg-[hsl(var(--secondary))] dark:hover:bg-slate-800 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium border border-transparent'
+          ? 'bg-primary-tint text-primary font-semibold border-l-4 border-l-primary'
+          : 'text-slate-500 hover:bg-muted hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium border-l-4 border-l-transparent'
       }`}
     >
-      <Icon size={21} strokeWidth={activeTab === id ? 2.35 : 2} className={`${activeTab === id ? 'text-primary dark:text-emerald-300' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'}`} />
+      <Icon size={21} strokeWidth={activeTab === id ? 2.35 : 2} className={`${activeTab === id ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300'}`} />
       {compactSidebar ? (
         <span className="mt-1 text-[10px] leading-tight text-center font-medium">
           {label}
@@ -382,20 +379,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
   );
 
   const renderContent = () => {
-      // Common components
       if (activeTab === 'settings') return <Settings language={language} setLanguage={setLanguage} />;
       
-      // Farmer Views
       if (userRole === 'farmer') {
           return <ConnectedFarmerDashboard language={language} searchQuery={searchQuery} activeTab={activeTab} />;
       }
 
-      // Expert Views
       if (userRole === 'expert') {
           return <ConnectedExpertDashboard searchQuery={searchQuery} activeTab={activeTab} />;
       }
 
-      // Admin Views
       if (userRole === 'admin') {
            return <ConnectedAdminDashboard activeTab={activeTab} searchQuery={searchQuery} />;
       }
@@ -404,9 +397,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
   };
 
   return (
-    <div className="dashboard-shell relative min-h-screen bg-[hsl(var(--background))] dark:bg-slate-950 font-sans text-slate-800 dark:text-slate-100 flex w-full">
+    <div className="dashboard-shell relative min-h-screen bg-background dark:bg-background font-sans text-slate-800 dark:text-slate-100 flex w-full">
 
-      
       {/* MOBILE OVERLAY */}
       <div 
         className={`fixed inset-0 bg-slate-950/35 backdrop-blur-[2px] z-40 md:hidden transition-opacity duration-300 ${
@@ -428,7 +420,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
             type="button"
             onClick={() => setActiveTab('overview')}
             title="RwandaBeyond"
-            className={`w-full rounded-[1.35rem] transition-colors ${compactSidebar ? 'flex justify-center px-0 py-1.5' : 'px-2 py-2 text-left hover:bg-[hsl(var(--secondary))] dark:hover:bg-slate-800/80'}`}
+            className={`w-full rounded-md transition-colors ${compactSidebar ? 'flex justify-center px-0 py-1.5' : 'px-2 py-2 text-left hover:bg-muted'}`}
           >
             <BrandLogo compact={compactSidebar} variant="sidebar" />
           </button>
@@ -451,11 +443,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
 
         {!compactSidebar && (
           <div className="px-2 pb-3">
-            <div className="rounded-[1.45rem] border border-[hsl(var(--border))] bg-[hsl(var(--secondary))] dark:bg-slate-950 px-3.5 py-3.5 flex items-center gap-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+            <div className="rounded-md border border-border bg-muted dark:bg-slate-950 px-3.5 py-3.5 flex items-center gap-3">
               <img
                 src={user?.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || userRole}`}
                 alt={`${displayName} avatar`}
-                className="w-11 h-11 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                className="w-11 h-11 rounded-md object-cover border border-border"
               />
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{displayName}</p>
@@ -467,10 +459,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
           </div>
         )}
 
-        <div className={`mt-auto border-t border-[hsl(var(--border))] px-2 py-4 ${compactSidebar ? 'px-1' : ''}`}>
+        <div className={`mt-auto border-t border-border px-2 py-4 ${compactSidebar ? 'px-1' : ''}`}>
            <button 
              onClick={onLogout}
-             className={`w-full flex ${compactSidebar ? 'flex-col justify-center px-2 py-3' : 'items-center gap-3 px-4 py-3.5'} rounded-[1.25rem] border border-transparent text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-100/80 dark:hover:border-red-900/40 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200 text-[14px] font-medium`}
+             className={`w-full flex ${compactSidebar ? 'flex-col justify-center px-2 py-3' : 'items-center gap-3 px-4 py-3'} rounded-md border border-transparent text-slate-600 dark:text-slate-400 hover:bg-danger-tint hover:border-danger/20 hover:text-danger transition-all duration-200 text-[14px] font-medium`}
            >
              <LogOut size={20} className="text-slate-400" />
              {compactSidebar ? (
@@ -484,18 +476,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <main className="dashboard-main relative flex-1 min-w-0 bg-[hsl(var(--background))] dark:bg-slate-950 flex flex-col h-screen overflow-y-auto">
+      <main className="dashboard-main relative flex-1 min-w-0 bg-background dark:bg-background flex flex-col h-screen overflow-y-auto">
         
         {/* HEADER TOP BAR */}
-        <header className="sticky top-0 z-30 border-b border-[hsl(var(--border))]/70 bg-[hsl(var(--background))]/90 dark:bg-slate-950/90 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/90 dark:bg-background/90 backdrop-blur-xl">
           <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4 px-4 py-4 md:px-6 lg:px-8">
            {/* Left */}
            <div className="flex items-center gap-4 flex-1 min-w-0">
-               <button className="md:hidden p-2.5 -ml-2 text-slate-500 hover:bg-white rounded-full border border-[hsl(var(--border))] bg-white/85" onClick={() => setIsMobileNavOpen(true)}>
+               <button className="md:hidden p-2.5 -ml-2 text-slate-500 hover:bg-white rounded-md border border-border bg-white/85" onClick={() => setIsMobileNavOpen(true)}>
                    <Menu size={24} />
                </button>
                <button
-                 className="hidden md:flex p-2.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors rounded-full border border-[hsl(var(--border))] hover:bg-white dark:hover:bg-slate-800 bg-white/85 dark:bg-slate-900"
+                 className="hidden md:flex p-2.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors rounded-md border border-border hover:bg-white dark:hover:bg-slate-800 bg-white/85 dark:bg-slate-900"
                  onClick={toggleSidebar}
                  title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                >
@@ -503,7 +495,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                </button>
                
                {/* Search */}
-               <div className="hidden md:flex items-center gap-3 bg-white/95 dark:bg-slate-900 px-5 py-3 rounded-full w-full max-w-[480px] focus-within:ring-2 ring-emerald-200/70 dark:ring-emerald-700/40 transition-all border border-[hsl(var(--border))] shadow-[0_16px_28px_-24px_rgba(15,23,42,0.28)]">
+               <div className="hidden md:flex items-center gap-3 bg-white dark:bg-card px-4 py-2.5 rounded-md w-full max-w-[480px] focus-within:ring-2 focus-within:ring-primary/20 transition-all border border-border shadow-sm">
                    <Search size={18} className="text-slate-400" />
                    <input
                      id="dashboard-search-input"
@@ -521,7 +513,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                        <X size={14} />
                      </button>
                    )}
-                   <div className="hidden lg:flex items-center justify-center gap-1 px-2.5 py-1 rounded-xl bg-[hsl(var(--secondary))] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-[10px] font-bold uppercase tracking-[0.18em]">
+                   <div className="hidden lg:flex items-center justify-center gap-1 px-2.5 py-1 rounded-sm bg-muted dark:bg-slate-800 border border-border text-slate-500 text-[10px] font-bold uppercase tracking-[0.18em]">
                      <span>/</span>
                      <span>Focus</span>
                    </div>
@@ -531,7 +523,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
            {/* Right Actions */}
            <div className="flex items-center gap-3 shrink-0">
                <button
-                 className="md:hidden p-2.5 text-slate-600 hover:bg-white rounded-full transition-colors border border-[hsl(var(--border))] bg-white/85"
+                 className="md:hidden p-2.5 text-slate-600 hover:bg-white rounded-md transition-colors border border-border bg-white/85"
                  onClick={() => setShowMobileSearch((previous) => !previous)}
                >
                   <Search size={20} />
@@ -540,7 +532,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                {toggleTheme && (
                    <button 
                      onClick={toggleTheme}
-                     className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors bg-white dark:bg-slate-900 shadow-[0_14px_26px_-22px_rgba(15,23,42,0.35)] border border-[hsl(var(--border))]"
+                     className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md transition-colors bg-white dark:bg-slate-900 shadow-sm border border-border"
                    >
                       {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                    </button>
@@ -548,22 +540,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
 
                <button
                   onClick={() => setShowAlerts((previous) => !previous)}
-                  className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors relative bg-white dark:bg-slate-900 shadow-[0_14px_26px_-22px_rgba(15,23,42,0.35)] border border-[hsl(var(--border))]"
+                  className="p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md transition-colors relative bg-white dark:bg-slate-900 shadow-sm border border-border"
                >
                   <Bell size={20} />
                   {totalUnreadCount > 0 && (
-                     <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                     <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-danger rounded-sm border-2 border-white dark:border-slate-900"></span>
                   )}
                </button>
-               
-               {/* Minimal visible profile for large screens is optional, but reference image has it right top */}
-              <div className="hidden lg:flex items-center gap-3 ml-2 cursor-pointer hover:opacity-90 transition-opacity pl-2 pr-3 py-2 rounded-full border border-[hsl(var(--border))] bg-white dark:bg-slate-900 shadow-[0_14px_26px_-22px_rgba(15,23,42,0.3)]" onClick={() => setActiveTab('settings')}>
-                <img src={user?.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || userRole}`} alt={`${displayName} profile`} className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 bg-slate-100" />
+              
+               <div className="hidden lg:flex items-center gap-3 ml-2 cursor-pointer hover:opacity-90 transition-opacity pl-2 pr-3 py-2 rounded-md border border-border bg-white dark:bg-slate-900 shadow-sm" onClick={() => setActiveTab('settings')}>
+                <img src={user?.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email || userRole}`} alt={`${displayName} profile`} className="w-10 h-10 rounded-md object-cover border border-border bg-slate-100" />
                   <div className="flex flex-col text-left">
                       <span className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{displayName}</span>
                       <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 leading-tight">{user?.email || 'User'}</span>
                   </div>
-               </div>
+              </div>
            </div>
           </div>
         </header>
@@ -571,12 +562,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
         {showMobileSearch && (
           <div className="md:hidden">
             <div className="mx-auto w-full max-w-[1600px] px-4 pt-3">
-              <div className="space-y-2 rounded-[1.5rem] border border-[hsl(var(--border))] bg-white/95 px-4 py-3 shadow-[0_14px_26px_-22px_rgba(15,23,42,0.25)] dark:bg-slate-900">
+              <div className="space-y-2 rounded-md border border-border bg-white/95 px-4 py-3 shadow-sm dark:bg-slate-900">
                 <div className="flex items-center justify-between gap-3 px-1">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                     {searchContextLabel}
                   </p>
-                  <span className="rounded-full bg-[hsl(var(--secondary))] px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                  <span className="rounded-sm bg-muted px-2.5 py-1 text-[10px] font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                     Tap outside or press Esc
                   </span>
                 </div>
@@ -610,11 +601,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
           <div className="dash-hero-panel">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
              <div>
-                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-[11px] font-semibold ${rolePillClass}`}>
-                   <span className={`h-2 w-2 rounded-full ${roleTheme.dot}`}></span>
+                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-sm border text-[11px] font-semibold ${rolePillClass}`}>
+                   <span className={`h-2 w-2 rounded-sm ${roleTheme.dot}`}></span>
                    {getRoleLabel(userRole)}
                  </div>
-                 <h1 className="text-[2.15rem] md:text-[2.7rem] font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.05] mt-4">{pageTitle}</h1>
+                 <h1 className="text-[2.15rem] md:text-[2.7rem] font-bold text-slate-900 dark:text-white tracking-tight leading-[1.05] mt-4">{pageTitle}</h1>
                 <p className="text-slate-500 dark:text-slate-400 text-[15px] mt-2.5 max-w-2xl">{pageSubtitle}</p>
                 <div className="mt-4 flex flex-wrap items-center gap-2.5">
                   <span className="dash-meta-pill">{todayLabel}</span>
@@ -628,8 +619,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                    Live status
                  </p>
-                 <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:bg-slate-900 dark:text-slate-300">
-                   <span className="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                 <div className="mt-2 inline-flex items-center gap-2 rounded-sm border border-border bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-300">
+                   <span className="h-2 w-2 rounded-sm bg-primary animate-pulse"></span>
                    {statusLabel}
                  </div>
                </div>
@@ -657,10 +648,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                     setShowMobileSearch(false);
                     setShowAlerts(false);
                   }}
-                  className={`shrink-0 inline-flex items-center gap-2 py-2.5 px-4 rounded-full border text-[14px] font-medium transition-all ${
+                  className={`shrink-0 inline-flex items-center gap-2 py-2.5 px-4 rounded-md border text-[14px] font-medium transition-all ${
                     isActive
-                      ? 'bg-primary text-primary-foreground border-transparent shadow-[0_18px_28px_-18px_rgba(27,107,70,0.62)]'
-                      : 'bg-white text-slate-500 border-[hsl(var(--border))] hover:text-slate-800 hover:border-slate-300 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800 dark:hover:text-slate-200'
+                      ? 'bg-primary text-primary-foreground border-transparent shadow-sm'
+                      : 'bg-white text-slate-500 border-border hover:text-slate-800 hover:border-slate-300 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
                   <TabIcon size={16} />
@@ -675,7 +666,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
         {showAlerts && (
           <div className="px-4 md:px-6 lg:px-8 max-w-[1600px] mx-auto w-full pt-4">
             <div className="dash-panel">
-              <div className="flex flex-col gap-4 px-5 py-4 border-b border-slate-200 dark:border-slate-800 md:flex-row md:items-start md:justify-between">
+              <div className="flex flex-col gap-4 px-5 py-4 border-b border-border md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="font-semibold text-sm">Notifications & Alerts</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -701,7 +692,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                   </button>
                   <button
                     onClick={() => clearAlerts()}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-red-600"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-danger"
                   >
                     <Trash2 size={14} />
                     Clear
@@ -724,17 +715,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                   persistedMessages.map((message: Message) => (
                     <div
                       key={message.id}
-                      className="px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-700/60"
+                      className="px-4 py-3 border-b last:border-b-0 border-border"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="text-sm font-semibold">{message.subject || 'Notification'}</p>
-                            <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">
+                            <span className="rounded-sm bg-muted dark:bg-slate-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">
                               {message.channel}
                             </span>
                             {message.recommendationId && (
-                              <span className="rounded-full bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                              <span className="rounded-sm bg-primary-tint dark:bg-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
                                 Recommendation
                               </span>
                             )}
@@ -745,7 +736,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          {!message.readAt && <span className="mt-1 w-2 h-2 rounded-full bg-red-500"></span>}
+                          {!message.readAt && <span className="mt-1 w-2 h-2 rounded-sm bg-danger"></span>}
                           {!message.readAt && (
                             <button
                               onClick={() => markMessageReadMutation.mutate(message.id)}
@@ -761,7 +752,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                   ))
                 )}
 
-                <div className="px-4 pt-4 pb-2 border-t border-slate-100 dark:border-slate-700/60">
+                <div className="px-4 pt-4 pb-2 border-t border-border">
                   <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Realtime Alerts</p>
                 </div>
                 {alerts.length === 0 ? (
@@ -772,7 +763,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                   alerts.slice(0, 8).map((alert) => (
                     <div
                       key={alert.id}
-                      className="px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-700/60"
+                      className="px-4 py-3 border-b last:border-b-0 border-border"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -783,7 +774,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          {!alert.isRead && <span className="mt-1 w-2 h-2 rounded-full bg-red-500"></span>}
+                          {!alert.isRead && <span className="mt-1 w-2 h-2 rounded-sm bg-danger"></span>}
                           {!alert.isRead && (
                             <button
                               onClick={() => markAsRead(alert.id)}
@@ -794,7 +785,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout, langua
                           )}
                           <button
                             onClick={() => removeAlert(alert.id)}
-                            className="text-[11px] font-semibold text-slate-500 hover:text-red-600"
+                            className="text-[11px] font-semibold text-slate-500 hover:text-danger"
                           >
                             Dismiss
                           </button>

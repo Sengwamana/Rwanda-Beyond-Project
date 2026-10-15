@@ -1,11 +1,10 @@
 // =====================================================
-// Alert Card Component - Smart Maize Farming System
-// Display alerts, notifications, and status messages
+// Alert Card Component - RwandaBeyond Agri-Business
 // =====================================================
 
 import React from 'react';
-import { 
-  AlertTriangle, AlertCircle, CheckCircle2, Info, 
+import {
+  AlertTriangle, AlertCircle, CheckCircle2, Info,
   X, Bell, Bug, Droplets, ThermometerSun, Wind
 } from 'lucide-react';
 
@@ -38,47 +37,45 @@ export const AlertCard: React.FC<AlertCardProps> = ({
   action,
   className = ''
 }) => {
-  // Type configurations
   const typeConfig = {
     success: {
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      borderColor: 'border-green-200 dark:border-green-800',
-      iconColor: 'text-green-600 dark:text-green-400',
-      iconBgColor: 'bg-green-100 dark:bg-green-800/50',
-      titleColor: 'text-green-800 dark:text-green-200',
-      textColor: 'text-green-700 dark:text-green-300',
+      bgColor: 'bg-success-tint dark:bg-success/10',
+      borderColor: 'border-success/20 dark:border-success/20',
+      iconColor: 'text-success',
+      iconBgColor: 'bg-success/10',
+      titleColor: 'text-success',
+      textColor: 'text-success/90',
       Icon: CheckCircle2
     },
     warning: {
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      borderColor: 'border-green-200 dark:border-green-800',
-      iconColor: 'text-green-600 dark:text-green-400',
-      iconBgColor: 'bg-green-100 dark:bg-green-800/50',
-      titleColor: 'text-green-800 dark:text-green-200',
-      textColor: 'text-green-700 dark:text-green-300',
+      bgColor: 'bg-warning-tint dark:bg-warning/10',
+      borderColor: 'border-warning/20 dark:border-warning/20',
+      iconColor: 'text-warning',
+      iconBgColor: 'bg-warning/10',
+      titleColor: 'text-warning',
+      textColor: 'text-warning/90',
       Icon: AlertTriangle
     },
     error: {
-      bgColor: 'bg-red-50 dark:bg-red-900/20',
-      borderColor: 'border-red-200 dark:border-red-800',
-      iconColor: 'text-red-600 dark:text-red-400',
-      iconBgColor: 'bg-red-100 dark:bg-red-800/50',
-      titleColor: 'text-red-800 dark:text-red-200',
-      textColor: 'text-red-700 dark:text-red-300',
+      bgColor: 'bg-danger-tint dark:bg-danger/10',
+      borderColor: 'border-danger/20 dark:border-danger/20',
+      iconColor: 'text-danger',
+      iconBgColor: 'bg-danger/10',
+      titleColor: 'text-danger',
+      textColor: 'text-danger/90',
       Icon: AlertCircle
     },
     info: {
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-      borderColor: 'border-blue-200 dark:border-blue-800',
-      iconColor: 'text-blue-600 dark:text-blue-400',
-      iconBgColor: 'bg-blue-100 dark:bg-blue-800/50',
-      titleColor: 'text-blue-800 dark:text-blue-200',
-      textColor: 'text-blue-700 dark:text-blue-300',
+      bgColor: 'bg-info-tint dark:bg-info/10',
+      borderColor: 'border-info/20 dark:border-info/20',
+      iconColor: 'text-info',
+      iconBgColor: 'bg-info/10',
+      titleColor: 'text-info',
+      textColor: 'text-info/90',
       Icon: Info
     }
   };
 
-  // Category icons
   const categoryIcons: Record<AlertCategory, typeof Bug> = {
     pest: Bug,
     irrigation: Droplets,
@@ -94,22 +91,20 @@ export const AlertCard: React.FC<AlertCardProps> = ({
 
   return (
     <div className={`
-      ${config.bgColor} 
+      ${config.bgColor}
       ${config.borderColor}
-      border rounded-[1.25rem] p-4 
+      border rounded-md p-4
       animate-fade-in
       ${className}
     `}>
       <div className="flex gap-3">
-        {/* Icon */}
         <div className={`
           ${config.iconBgColor}
-          w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0
+          w-9 h-9 rounded-md flex items-center justify-center flex-shrink-0
         `}>
-          <AlertIcon className={config.iconColor} size={20} />
+          <AlertIcon className={config.iconColor} size={18} />
         </div>
 
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -117,19 +112,19 @@ export const AlertCard: React.FC<AlertCardProps> = ({
                 {title}
               </h4>
               {category !== 'general' && (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-0.5">
                   <CategoryIcon size={10} />
                   {category}
                 </span>
               )}
             </div>
-            
+
             {dismissable && (
               <button
                 onClick={onDismiss}
-                className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="p-1 rounded-sm hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
               >
-                <X size={16} className="text-slate-400" />
+                <X size={14} className="text-muted-foreground" />
               </button>
             )}
           </div>
@@ -138,24 +133,23 @@ export const AlertCard: React.FC<AlertCardProps> = ({
             {message}
           </p>
 
-          {/* Footer: Timestamp & Action */}
           <div className="flex items-center justify-between mt-3">
             {timestamp && (
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-xs text-muted-foreground">
                 {timestamp}
               </span>
             )}
-            
+
             {action && (
               <button
                 onClick={action.onClick}
                 className={`
-                  text-xs font-semibold 
+                  text-xs font-semibold
                   ${config.iconColor}
                   hover:underline
                 `}
               >
-                {action.label} {'→'}
+                {action.label}
               </button>
             )}
           </div>
@@ -165,108 +159,4 @@ export const AlertCard: React.FC<AlertCardProps> = ({
   );
 };
 
-// =====================================================
-// Alert List - Stacked alerts container
-// =====================================================
-
-interface Alert {
-  id: string;
-  type: AlertType;
-  title: string;
-  message: string;
-  category?: AlertCategory;
-  timestamp?: string;
-}
-
-interface AlertListProps {
-  alerts: Alert[];
-  onDismiss?: (id: string) => void;
-  maxVisible?: number;
-  className?: string;
-}
-
-export const AlertList: React.FC<AlertListProps> = ({
-  alerts,
-  onDismiss,
-  maxVisible = 5,
-  className = ''
-}) => {
-  const visibleAlerts = alerts.slice(0, maxVisible);
-  const hiddenCount = alerts.length - maxVisible;
-
-  return (
-    <div className={`space-y-3 ${className}`}>
-      {visibleAlerts.map((alert) => (
-        <AlertCard
-          key={alert.id}
-          type={alert.type}
-          title={alert.title}
-          message={alert.message}
-          category={alert.category}
-          timestamp={alert.timestamp}
-          dismissable={!!onDismiss}
-          onDismiss={() => onDismiss?.(alert.id)}
-        />
-      ))}
-      
-      {hiddenCount > 0 && (
-        <p className="text-center text-sm text-slate-500 dark:text-slate-400 py-2">
-          +{hiddenCount} more alerts
-        </p>
-      )}
-    </div>
-  );
-};
-
-// =====================================================
-// Toast Notification - Floating notification
-// =====================================================
-
-interface ToastProps {
-  type: AlertType;
-  message: string;
-  onClose: () => void;
-  duration?: number;
-}
-
-export const Toast: React.FC<ToastProps> = ({
-  type,
-  message,
-  onClose,
-  duration = 5000
-}) => {
-  React.useEffect(() => {
-    const timer = setTimeout(onClose, duration);
-    return () => clearTimeout(timer);
-  }, [duration, onClose]);
-
-  const config = {
-    success: { bg: 'bg-green-600', Icon: CheckCircle2 },
-    warning: { bg: 'bg-green-500', Icon: AlertTriangle },
-    error: { bg: 'bg-red-600', Icon: AlertCircle },
-    info: { bg: 'bg-blue-600', Icon: Info }
-  };
-
-  const { bg, Icon } = config[type];
-
-  return (
-    <div className={`
-      ${bg} text-white
-      px-4 py-3 rounded-xl shadow-xl
-      flex items-center gap-3
-      animate-slide-in-right
-    `}>
-      <Icon size={20} />
-      <p className="text-sm font-medium flex-1">{message}</p>
-      <button
-        onClick={onClose}
-        className="p-1 rounded-lg hover:bg-white/20 transition-colors"
-      >
-        <X size={16} />
-      </button>
-    </div>
-  );
-};
-
 export default AlertCard;
-

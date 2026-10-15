@@ -10,12 +10,12 @@ interface BrandLogoProps extends React.HTMLAttributes<HTMLDivElement> {
 const variantClasses: Record<NonNullable<BrandLogoProps['variant']>, { wrapper: string; mark: string; text: string }> = {
   navbar: {
     wrapper: 'gap-2',
-    mark: 'rounded-lg p-1.5',
+    mark: 'rounded-md p-1.5',
     text: 'text-lg',
   },
   sidebar: {
     wrapper: 'w-full min-w-0 gap-2.5',
-    mark: 'rounded-lg p-1.5',
+    mark: 'rounded-md p-1.5',
     text: 'text-lg',
   },
 };
@@ -39,8 +39,8 @@ export function BrandLogo({
     >
       <div
         className={cn(
-          'shrink-0 bg-primary text-primary-foreground shadow-[0_16px_30px_-24px_rgba(15,81,50,0.7)]',
-          compact ? 'rounded-lg p-1.5' : selectedVariant.mark
+          'shrink-0 bg-primary text-primary-foreground shadow-sm',
+          compact ? 'rounded-md p-1.5' : selectedVariant.mark
         )}
       >
         <Sprout className="fill-current" size={20} />

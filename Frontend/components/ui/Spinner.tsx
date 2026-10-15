@@ -1,5 +1,5 @@
 // =====================================================
-// Spinner Component - Smart Maize Farming System
+// Spinner Component - RwandaBeyond Agri-Business
 // =====================================================
 
 import React from 'react';
@@ -62,7 +62,7 @@ interface LoadingStateProps {
 
 export function LoadingState({ text = 'Loading...', size = 'lg', className }: LoadingStateProps) {
   return (
-    <div className={cn('flex flex-col items-center justify-center gap-4 rounded-[1.5rem] border border-dashed border-[hsl(var(--border))] bg-[hsl(var(--secondary))]/70 px-6 py-10 text-center', className)}>
+    <div className={cn('flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-border bg-muted px-6 py-8 text-center', className)}>
       <Spinner size={size} />
       <p className="max-w-md text-sm text-muted-foreground">{text}</p>
     </div>
@@ -89,15 +89,15 @@ interface ErrorStateProps {
   onRetry?: () => void;
 }
 
-export function ErrorState({ 
-  title = 'Something went wrong', 
+export function ErrorState({
+  title = 'Something went wrong',
   message = 'An error occurred while loading data.',
-  onRetry 
+  onRetry
 }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-[1.5rem] border border-destructive/15 bg-destructive/5 px-6 py-10 text-center" role="alert">
-      <div className="rounded-full bg-destructive/10 p-4">
-        <AlertTriangle className="h-8 w-8 text-destructive" />
+    <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-danger/15 bg-danger/5 px-6 py-8 text-center" role="alert">
+      <div className="rounded-md bg-danger/10 p-3">
+        <AlertTriangle className="h-6 w-6 text-danger" />
       </div>
       <div>
         <h3 className="font-semibold text-foreground">{title}</h3>
@@ -119,22 +119,22 @@ interface EmptyStateProps {
   action?: React.ReactNode;
 }
 
-export function EmptyState({ 
-  title = 'No data found', 
+export function EmptyState({
+  title = 'No data found',
   message = 'There is no data to display.',
   icon,
-  action 
+  action
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded-[1.5rem] border border-dashed border-[hsl(var(--border))] bg-[hsl(var(--secondary))]/70 px-6 py-10 text-center">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted px-6 py-6 text-center">
       {icon || (
-        <div className="rounded-full bg-muted p-4">
-          <Inbox className="h-8 w-8 text-muted-foreground" />
+        <div className="rounded-md bg-slate-100 dark:bg-slate-800 p-3">
+          <Inbox className="h-6 w-6 text-muted-foreground" />
         </div>
       )}
       <div>
-        <h3 className="font-semibold text-foreground">{title}</h3>
-        <p className="mt-1 max-w-md text-sm text-muted-foreground">{message}</p>
+        <h3 className="font-semibold text-sm text-foreground">{title}</h3>
+        <p className="mt-1 max-w-sm text-xs text-muted-foreground">{message}</p>
       </div>
       {action}
     </div>
