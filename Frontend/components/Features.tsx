@@ -20,7 +20,7 @@ export const Features: React.FC = () => {
     staleTime: 60 * 1000,
   });
 
-  const hero = data?.data?.hero || {};
+  const hero = (data?.data as any)?.hero || {};
   const cards = data?.data?.cards || [];
   const highlights = data?.data?.highlights || [];
   const integrations = data?.data?.integrations || [];

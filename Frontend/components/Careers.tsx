@@ -1,158 +1,140 @@
 import React, { useState } from 'react';
-import { Heart, Zap, Users, ArrowRight, MapPin, CheckCircle2, Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
+import { MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Language, translations } from '../utils/translations';
 import { contentService } from '../services/content';
 
 interface CareersProps {
-    language?: Language;
+  language: Language;
 }
 
-const valueIconMap: Record<string, any> = {
-    heart: Heart,
-    zap: Zap,
-    users: Users,
-};
-
-const valueIconStyleMap: Record<string, string> = {
-    heart: 'bg-emerald-50 text-[#0F5132]',
-    zap: 'bg-blue-50 text-blue-600',
-    users: 'bg-purple-50 text-purple-600',
+const departmentColors: Record<string, string> = {
+  engineering: 'bg-primary-tint text-primary',
+  operations: 'bg-accent-tint text-accent',
+  research: 'bg-info-tint text-info',
+  support: 'bg-success-tint text-success',
+  marketing: 'bg-warning-tint text-warning',
 };
 
 export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
-    const t = translations[language].careers;
-    const [applyingFor, setApplyingFor] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [successMsg, setSuccessMsg] = useState<string | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const t = translations[language]?.careers || {};
+  const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
 
-    const { data, isLoading, isError, refetch } = useQuery({
-        queryKey: ['content', 'careers'],
-        queryFn: () => contentService.getCareers(),
-        staleTime: 60 * 1000,
-    });
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['content', 'careers'],
+    queryFn: () => contentService.getCareers(),
+    staleTime: 60 * 1000,
+  });
 
-    const positions = data?.data?.positions || [];
-    const values = data?.data?.values || [];
+  const hero = (data?.data as any)?.hero || {};
+  const jobs = (data?.data as any)?.jobs || [];
+  const benefits = (data?.data as any)?.benefits || [];
+  const departments = [...new Set(jobs.map((j: any) => j.department).filter(Boolean))];
 
-    const handleApply = async (id: string | undefined, title: string) => {
-        setApplyingFor(title);
-        setIsSubmitting(true);
-        setErrorMsg(null);
+  const filteredJobs = selectedDepartment
+    ? jobs.filter((j: any) => j.department === selectedDepartment)
+    : jobs;
 
-        try {
-            await contentService.submitCareerInterest(id, title);
-            setSuccessMsg(`Application for ${title} submitted!`);
-            setTimeout(() => setSuccessMsg(null), 4000);
-        } catch {
-            setErrorMsg(`Failed to submit application for ${title}.`);
-            setTimeout(() => setErrorMsg(null), 4000);
-        } finally {
-            setIsSubmitting(false);
-            setApplyingFor(null);
-        }
-    };
-
-    return (
-        <div className="bg-[#FAFAF9] min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-900 relative">
-            {successMsg && (
-                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-slide-up">
-                    <div className="bg-[#0F5132] text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-3 font-bold text-sm">
-                        <CheckCircle2 size={18} /> {successMsg}
-                    </div>
-                </div>
-            )}
-            {errorMsg && (
-                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-slide-up">
-                    <div className="bg-red-600 text-white px-6 py-3 rounded-full shadow-xl flex items-center gap-3 font-bold text-sm">
-                        <CheckCircle2 size={18} /> {errorMsg}
-                    </div>
-                </div>
-            )}
-
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-20">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-[#0F5132] text-xs font-bold uppercase tracking-wider mb-6">
-                        We're Hiring
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 leading-[1.1] tracking-tight">
-                        {t.title}
-                    </h1>
-                    <p className="text-xl text-slate-500 leading-relaxed">
-                        {t.subtitle}
-                    </p>
-                </div>
-
-                {isLoading && (
-                    <div className="text-center text-slate-500 mb-10">Loading careers content...</div>
-                )}
-                {isError && (
-                    <div className="text-center mb-10">
-                        <p className="text-red-500 mb-3">Failed to load careers content.</p>
-                        <button
-                            onClick={() => refetch()}
-                            className="px-4 py-2 rounded-full bg-[#0F5132] text-white text-sm font-bold"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                )}
-
-                <div className="grid md:grid-cols-3 gap-8 mb-24">
-                    {values.map((value, index) => {
-                        const iconKey = String(value.icon || '').toLowerCase();
-                        const Icon = valueIconMap[iconKey] || Heart;
-                        const iconStyle = valueIconStyleMap[iconKey] || valueIconStyleMap.heart;
-
-                        return (
-                            <div key={value.id || `${value.title}-${index}`} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${iconStyle}`}>
-                                    <Icon size={24} />
-                                </div>
-                                <h3 className="text-xl font-bold mb-3">{value.title}</h3>
-                                <p className="text-slate-500 leading-relaxed">{value.desc}</p>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                <div className="bg-white rounded-[3rem] p-10 md:p-16 border border-slate-100 shadow-sm">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-10">{t.openings}</h2>
-
-                    <div className="grid gap-6">
-                        {positions.map((job, i) => (
-                            <div key={job.id || `${job.title}-${i}`} className="group flex flex-col md:flex-row md:items-center justify-between p-6 rounded-[2rem] border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all cursor-pointer">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">{job.department}</span>
-                                        <span className="text-xs font-bold text-slate-400 flex items-center gap-1"><MapPin size={12} /> {job.location}</span>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2">{job.title}</h3>
-                                    <p className="text-slate-500 text-sm max-w-xl">{job.desc}</p>
-                                </div>
-                                <div className="mt-6 md:mt-0">
-                                    <button
-                                        onClick={() => handleApply(job.id, job.title)}
-                                        disabled={isSubmitting && applyingFor === job.title}
-                                        className="px-6 py-3 rounded-full bg-white border border-slate-200 text-slate-900 font-bold text-sm group-hover:bg-[#0F5132] group-hover:text-white group-hover:border-[#0F5132] transition-colors flex items-center gap-2 min-w-[140px] justify-center"
-                                    >
-                                        {isSubmitting && applyingFor === job.title ? (
-                                            <Loader2 size={16} className="animate-spin" />
-                                        ) : (
-                                            <>{t.apply} <ArrowRight size={16} /></>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {!isLoading && !isError && positions.length === 0 && (
-                        <div className="text-center text-slate-500 mt-8">No open positions available yet.</div>
-                    )}
-                </div>
-            </div>
+  return (
+    <div className="bg-background dark:bg-background min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-800 dark:text-white transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+            {hero.badge || 'Careers'}
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
+            {hero.title || 'Join Our Mission'}
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            {hero.subtitle || "Help us transform agriculture in Rwanda. We're looking for passionate people who want to make a real difference in farmers' lives."}
+          </p>
         </div>
-    );
+
+        {/* Benefits */}
+        {benefits.length > 0 && (
+          <div className="grid md:grid-cols-4 gap-4 mb-16">
+            {benefits.map((benefit: any, idx: number) => (
+              <div key={idx} className="bg-white dark:bg-card rounded-lg p-5 border border-border shadow-sm text-center">
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white mb-1">{benefit.title}</h4>
+                <p className="text-xs text-muted-foreground">{benefit.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {isLoading && <div className="text-center text-muted-foreground">Loading careers...</div>}
+        {isError && (
+          <div className="text-center">
+            <p className="text-danger mb-3">Failed to load careers content.</p>
+            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">Retry</button>
+          </div>
+        )}
+
+        {/* Department Filter */}
+        {departments.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            <button
+              onClick={() => setSelectedDepartment(null)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${!selectedDepartment ? 'bg-primary text-white' : 'bg-white dark:bg-card border border-border text-muted-foreground hover:text-slate-900'}`}
+            >
+              All Departments
+            </button>
+            {departments.map((dept: any) => (
+              <button
+                key={dept}
+                onClick={() => setSelectedDepartment(dept)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${selectedDepartment === dept ? 'bg-primary text-white' : 'bg-white dark:bg-card border border-border text-muted-foreground hover:text-slate-900'}`}
+              >
+                {dept}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Job Listings */}
+        <div className="space-y-4">
+          {filteredJobs.map((job: any, idx: number) => (
+            <div key={job.id || idx} className="bg-white dark:bg-card rounded-lg border border-border p-6 hover:shadow-md transition-all duration-200 group">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors">{job.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{job.description}</p>
+                  <div className="flex flex-wrap items-center gap-3 mt-3">
+                    {job.department && (
+                      <span className={`text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider ${departmentColors[job.department.toLowerCase()] || 'bg-muted text-muted-foreground'}`}>
+                        {job.department}
+                      </span>
+                    )}
+                    {job.location && (
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin size={12} />
+                        {job.location}
+                      </span>
+                    )}
+                    {job.type && (
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock size={12} />
+                        {job.type}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-card border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm rounded-md hover:bg-primary hover:text-white hover:border-primary transition-colors group">
+                  Apply Now <ArrowRight size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {!isLoading && !isError && jobs.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">No open positions at the moment.</p>
+            <p className="text-sm text-muted-foreground">Check back soon — we're always growing!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
+

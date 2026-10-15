@@ -126,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
               {/* BOTTOM SECTION: Copyright & Links */}
               <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                  <p className="text-xs text-primary-tint">© Copyright 2024, RwandaBeyond All Rights Reserved</p>
+                  <p className="text-xs text-primary-tint">© Copyright 2026, RwandaBeyond All Rights Reserved</p>
                   <div className="flex gap-6 text-xs font-medium text-primary-tint">
                       <button onClick={() => onNavigate('faq')} className="hover:text-white transition-colors">FAQ</button>
                       <button onClick={() => onNavigate('terms')} className="hover:text-white transition-colors">Term of Service</button>

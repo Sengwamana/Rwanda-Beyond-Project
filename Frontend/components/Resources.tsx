@@ -1,116 +1,129 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Video, FileText, Calendar } from 'lucide-react';
-import { Language, translations } from '../utils/translations';
 import { useQuery } from '@tanstack/react-query';
+import { FileText, Video, BookOpen, ArrowRight } from 'lucide-react';
+import { Language, translations } from '../utils/translations';
 import { contentService } from '../services/content';
 
 interface ResourcesProps {
-    language?: Language;
+  language: Language;
 }
 
+const typeIcons: Record<string, React.ElementType> = {
+  article: FileText,
+  video: Video,
+  guide: BookOpen,
+};
+
 export const Resources: React.FC<ResourcesProps> = ({ language = 'en' }) => {
-    const t = translations[language].resources;
-    const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const t = translations[language]?.resources || {};
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-    const { data, isLoading, isError, refetch } = useQuery({
-        queryKey: ['content', 'resources'],
-        queryFn: () => contentService.getResources(),
-        staleTime: 60 * 1000,
-    });
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['content', 'resources'],
+    queryFn: () => contentService.getResources(),
+    staleTime: 60 * 1000,
+  });
 
-    const posts = data?.data?.items || [];
-    const categories = data?.data?.categories || [];
-    const filteredPosts = activeCategory 
-        ? posts.filter(post => post.category === activeCategory)
-        : posts;
+  const hero = (data?.data as any)?.hero || {};
+  const categories = (data?.data as any)?.categories || [];
+  const items = (data?.data as any)?.items || [];
 
-    return (
-        <div className="bg-[#FAFAF9] dark:bg-slate-900 min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-900 dark:text-white transition-colors duration-300">
-            <div className="max-w-7xl mx-auto px-6">
-                
-                {/* Header */}
-                <div className="text-center max-w-3xl mx-auto mb-20">
-                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 text-[#0F5132] dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6">
-                        Latest Updates
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                        {t.title}
-                    </h1>
-                    <p className="text-xl text-slate-500 dark:text-slate-400 leading-relaxed">
-                        {t.subtitle}
-                    </p>
-                    <div className="flex flex-wrap gap-2 justify-center mt-10">
-                        <button 
-                            onClick={() => setActiveCategory(null)}
-                            className={`px-6 py-2.5 rounded-full border text-sm font-bold transition-colors shadow-sm ${!activeCategory ? 'bg-[#0F5132] text-white border-[#0F5132]' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
-                        >
-                            All
-                        </button>
-                        {categories.map((cat: string, i: number) => (
-                            <button 
-                                key={i} 
-                                onClick={() => setActiveCategory(cat)}
-                                className={`px-6 py-2.5 rounded-full border text-sm font-bold transition-colors shadow-sm ${activeCategory === cat ? 'bg-[#0F5132] text-white border-[#0F5132]' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+  const filteredItems = items.filter((item: any) => {
+    const matchesCategory = !activeCategory || item.category === activeCategory;
+    const matchesSearch = !searchQuery || item.title?.toLowerCase().includes(searchQuery.toLowerCase()) || item.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
-                {isLoading && (
-                    <div className="text-center text-slate-500 dark:text-slate-400 mb-8">Loading resources...</div>
-                )}
-                {isError && (
-                    <div className="text-center mb-8">
-                        <p className="text-red-500 mb-3">Failed to load resources.</p>
-                        <button
-                            onClick={() => refetch()}
-                            className="px-4 py-2 rounded-full bg-[#0F5132] text-white text-sm font-bold"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                )}
-
-                {/* Grid */}
-                <div className="grid md:grid-cols-3 gap-8">
-                    {filteredPosts.map((post, i) => (
-                        <div key={i} className="bg-white dark:bg-slate-800 rounded-[2.5rem] overflow-hidden border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer h-full flex flex-col">
-                            <div className="h-64 overflow-hidden relative">
-                                <img src={post.image} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" alt={post.title} />
-                                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold text-slate-900 uppercase tracking-wider border border-white/20 shadow-sm">
-                                    {post.category}
-                                </div>
-                            </div>
-                            <div className="p-8 flex-1 flex flex-col">
-                                    <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase mb-4">
-                                        <Calendar size={12} /> {post.date}
-                                    </div>
-                                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-[#0F5132] dark:group-hover:text-emerald-400 transition-colors leading-tight">{post.title}</h3>
-                                <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 flex-1 leading-relaxed">
-                                    {post.desc}
-                                </p>
-                                <div className="flex justify-between items-center pt-6 border-t border-slate-50 dark:border-slate-700">
-                                    <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wide bg-slate-50 dark:bg-slate-700 px-3 py-1 rounded-lg group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/30 group-hover:text-[#0F5132] dark:group-hover:text-emerald-400 transition-colors">
-                                        {post.type === 'video' ? <Video size={14} /> : <FileText size={14} />}
-                                        {post.type === 'video' ? 'Video Tutorial' : '5 Min Read'}
-                                    </div>
-                                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-[#0F5132] group-hover:text-white transition-all duration-300">
-                                        <ArrowUpRight size={20} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                {!isLoading && !isError && filteredPosts.length === 0 && (
-                    <div className="text-center text-slate-500 dark:text-slate-400 mt-8">
-                        No resources available yet.
-                    </div>
-                )}
-
-            </div>
+  return (
+    <div className="bg-background dark:bg-background min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-800 dark:text-white transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+            {hero.badge || 'Resources'}
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
+            {hero.title || 'Agricultural Knowledge Center'}
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            {hero.subtitle || 'Guides, videos, and articles to help you get the most out of precision agriculture and the RwandaBeyond platform.'}
+          </p>
         </div>
-    );
+
+        {/* Search */}
+        <div className="max-w-xl mx-auto mb-8">
+          <input
+            type="text"
+            placeholder="Search resources..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-3 rounded-md border border-border bg-white dark:bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-colors"
+          />
+        </div>
+
+        {/* Categories */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            <button
+              onClick={() => setActiveCategory(null)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${!activeCategory ? 'bg-primary text-white' : 'bg-white dark:bg-card border border-border text-muted-foreground hover:text-slate-900'}`}
+            >
+              All Topics
+            </button>
+            {categories.map((cat: string) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeCategory === cat ? 'bg-primary text-white' : 'bg-white dark:bg-card border border-border text-muted-foreground hover:text-slate-900'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {isLoading && <div className="text-center text-muted-foreground">Loading resources...</div>}
+        {isError && (
+          <div className="text-center">
+            <p className="text-danger mb-3">Failed to load resources.</p>
+            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">Retry</button>
+          </div>
+        )}
+
+        {/* Resource Grid */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {filteredItems.map((item: any, idx: number) => {
+            const typeKey = String(item.type || '').toLowerCase();
+            const TypeIcon = typeIcons[typeKey] || FileText;
+            return (
+              <div key={item.id || idx} className="bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 group">
+                {item.image && (
+                  <div className="h-48 overflow-hidden">
+                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                )}
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <TypeIcon size={16} className="text-primary" />
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.type || 'Article'}</span>
+                  </div>
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors leading-tight">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+                  <button className="flex items-center gap-1 text-sm font-bold text-primary hover:gap-2 transition-all">
+                    Read More <ArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {!isLoading && !isError && items.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No resources available yet.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

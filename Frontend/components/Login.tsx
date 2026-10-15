@@ -180,7 +180,7 @@ export const Login: React.FC<LoginProps> = ({ onNavigate, language = 'en' }) => 
         </div>
 
         <div className="relative z-10 flex gap-4 text-sm font-medium text-emerald-200/80">
-          <span>Copyright 2024 RwandaBeyond</span>
+          <span>Copyright 2026 RwandaBeyond</span>
           <span>Privacy Policy</span>
           <span>Terms</span>
         </div>

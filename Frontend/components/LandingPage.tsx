@@ -2,7 +2,10 @@
 import {
   ArrowRight, ArrowUpRight, Cloud, Sun, Droplets, MapPin,
   MessageSquare, Mic, List, CheckCircle2, TrendingUp, Bell,
-  Radio, Smartphone, Sprout, Quote, Check
+  Radio, Smartphone, Sprout, Quote, Check, Wifi, CloudRain,
+  Thermometer, Wind, Shield, Zap, Database, BarChart3, Users,
+  ChevronDown, ChevronUp, AlertTriangle, Leaf, Droplet, SunMedium,
+  CloudSun, SproutIcon, Bug, FlaskConical, Tractor, Satellite
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { Language, translations } from '../utils/translations';
@@ -15,17 +18,128 @@ interface LandingPageProps {
   language?: Language;
 }
 
-// Reusable Phone Frame Component
 const PhoneMockup: React.FC<{children: React.ReactNode, alignRight?: boolean}> = ({ children, alignRight }) => (
     <div className={`relative w-[280px] h-[580px] bg-gray-900 rounded-2xl border-2 border-gray-800 shadow-2xl overflow-hidden mx-auto ${alignRight ? 'lg:mr-0' : 'lg:ml-0'}`}>
-        {/* Dynamic Island / Notch */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-28 h-6 bg-black rounded-b-lg z-20"></div>
-        {/* Screen Content */}
         <div className="w-full h-full bg-slate-50 overflow-y-auto scrollbar-hide pt-6 pb-4 relative">
              {children}
         </div>
     </div>
 );
+
+// Infographic: System Architecture Diagram
+const SystemDiagram: React.FC = () => (
+  <div className="relative bg-white dark:bg-card rounded-lg border border-border p-8 shadow-sm overflow-hidden">
+    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary" />
+    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 text-center">System Architecture</h3>
+    
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+      {/* Connection lines */}
+      <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 -translate-y-1/2 z-0" />
+      
+      {/* Sensor Layer */}
+      <div className="relative z-10 bg-primary-tint rounded-lg p-4 text-center border border-primary/10">
+        <div className="w-12 h-12 bg-primary rounded-md flex items-center justify-center mx-auto mb-3">
+          <Radio className="text-white" size={24} />
+        </div>
+        <h4 className="font-bold text-sm text-slate-900 dark:text-white">1. IoT Sensors</h4>
+        <p className="text-xs text-muted-foreground mt-1">Soil moisture, temperature, humidity, NPK probes</p>
+      </div>
+
+      {/* Connectivity Layer */}
+      <div className="relative z-10 bg-accent-tint rounded-lg p-4 text-center border border-accent/10">
+        <div className="w-12 h-12 bg-accent rounded-md flex items-center justify-center mx-auto mb-3">
+          <Wifi className="text-white" size={24} />
+        </div>
+        <h4 className="font-bold text-sm text-slate-900 dark:text-white">2. Connectivity</h4>
+        <p className="text-xs text-muted-foreground mt-1">LoRaWAN, GSM, USSD fallback for offline areas</p>
+      </div>
+
+      {/* Cloud Layer */}
+      <div className="relative z-10 bg-info-tint rounded-lg p-4 text-center border border-info/10">
+        <div className="w-12 h-12 bg-info rounded-md flex items-center justify-center mx-auto mb-3">
+          <Database className="text-white" size={24} />
+        </div>
+        <h4 className="font-bold text-sm text-slate-900 dark:text-white">3. Cloud Platform</h4>
+        <p className="text-xs text-muted-foreground mt-1">Real-time processing, AI analysis, data storage</p>
+      </div>
+
+      {/* Application Layer */}
+      <div className="relative z-10 bg-success-tint rounded-lg p-4 text-center border border-success/10">
+        <div className="w-12 h-12 bg-success rounded-md flex items-center justify-center mx-auto mb-3">
+          <Smartphone className="text-white" size={24} />
+        </div>
+        <h4 className="font-bold text-sm text-slate-900 dark:text-white">4. User Apps</h4>
+        <p className="text-xs text-muted-foreground mt-1">Dashboard, mobile app, USSD, voice assistant</p>
+      </div>
+    </div>
+  </div>
+);
+
+// Infographic: Data Flow
+const DataFlowDiagram: React.FC = () => (
+  <div className="bg-white dark:bg-card rounded-lg border border-border p-8 shadow-sm">
+    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 text-center">How Data Flows</h3>
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      {[
+        { icon: Thermometer, label: 'Sensors Collect', desc: 'Soil & weather data', color: 'bg-primary' },
+        { icon: Wifi, label: 'Transmit', desc: 'Via LoRaWAN/GSM', color: 'bg-accent' },
+        { icon: Database, label: 'Cloud Processes', desc: 'AI analysis', color: 'bg-info' },
+        { icon: Bell, label: 'Alert & Advise', desc: 'Real-time notifications', color: 'bg-warning' },
+        { icon: CheckCircle2, label: 'Action', desc: 'Irrigate, fertilize, treat', color: 'bg-success' },
+      ].map((step, i) => (
+        <React.Fragment key={step.label}>
+          <div className="flex flex-col items-center text-center">
+            <div className={`w-16 h-16 ${step.color} rounded-md flex items-center justify-center mb-3`}>
+              <step.icon className="text-white" size={28} />
+            </div>
+            <h4 className="font-bold text-sm">{step.label}</h4>
+            <p className="text-xs text-muted-foreground mt-1 max-w-[120px]">{step.desc}</p>
+          </div>
+          {i < 4 && (
+            <div className="hidden md:block">
+              <ArrowRight className="text-muted-foreground" size={24} />
+            </div>
+          )}
+          {i < 4 && (
+            <div className="md:hidden">
+              <ChevronDown className="text-muted-foreground" size={24} />
+            </div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  </div>
+);
+
+// Infographic: What We Monitor
+const MonitoringGrid: React.FC = () => {
+  const metrics = [
+    { icon: Droplets, label: 'Soil Moisture', desc: 'Volumetric water content at multiple depths', unit: '%', color: 'text-info' },
+    { icon: Thermometer, label: 'Soil Temperature', desc: 'Root-zone temperature for germination', unit: '°C', color: 'text-accent' },
+    { icon: Wind, label: 'Air Humidity', desc: 'Relative humidity for disease prediction', unit: '%', color: 'text-info' },
+    { icon: Sun, label: 'Light Intensity', desc: 'Photosynthetically active radiation', unit: 'lux', color: 'text-accent' },
+    { icon: CloudRain, label: 'Rainfall', desc: 'Precipitation for irrigation planning', unit: 'mm', color: 'text-info' },
+    { icon: FlaskConical, label: 'NPK Levels', desc: 'Nitrogen, Phosphorus, Potassium in soil', unit: 'mg/kg', color: 'text-primary' },
+    { icon: Bug, label: 'Pest Detection', desc: 'AI image recognition from field photos', unit: 'AI', color: 'text-danger' },
+    { icon: Satellite, label: 'Weather Forecast', desc: 'Hyperlocal predictions for your field', unit: '5-day', color: 'text-info' },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {metrics.map((m) => (
+        <div key={m.label} className="bg-white dark:bg-card rounded-lg border border-border p-5 shadow-sm hover:shadow-md transition-all">
+          <div className="w-10 h-10 bg-muted rounded-md flex items-center justify-center mb-3">
+            <m.icon className={m.color} size={20} />
+          </div>
+          <h4 className="font-bold text-sm text-slate-900 dark:text-white">{m.label}</h4>
+          <p className="text-xs text-muted-foreground mt-1">{m.desc}</p>
+          <span className="inline-block mt-2 text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-sm">{m.unit}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, language = 'en' }) => {
   const t = translations[language].landing;
@@ -54,11 +168,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
       {/* 1. HERO SECTION */}
       <section className="relative pt-10 pb-20 lg:pt-16 lg:pb-32 overflow-hidden bg-background dark:bg-background">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-
-          {/* Left: Content */}
           <div className="relative z-20 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
-              <Droplets size={14} />
+              <Sprout size={14} />
               Smart Farming Platform
             </div>
             <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-[1.1] mb-6 tracking-tight">
@@ -67,29 +179,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed max-w-lg mx-auto lg:mx-0">
               {t.heroSubtitle}
             </p>
-
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button
-                onClick={() => onNavigate('login')}
-                className="px-8 py-4 bg-primary text-white rounded-md font-bold hover:bg-primary-hover transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
-              >
+              <button onClick={() => onNavigate('login')} className="px-8 py-4 bg-primary text-white rounded-md font-bold hover:bg-primary-hover transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group">
                 {t.signIn} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <button
-                onClick={() => onNavigate('features')}
-                className="px-8 py-4 border-2 border-primary/60 text-primary rounded-md font-bold hover:bg-primary/5 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-              >
+              <button onClick={() => onNavigate('features')} className="px-8 py-4 border-2 border-primary/60 text-primary rounded-md font-bold hover:bg-primary/5 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                 Learn More
               </button>
             </div>
           </div>
-
-          {/* Right: Dashboard Mockup */}
           <div className="relative flex justify-center lg:justify-end">
-             {/* Decorative Background Elements */}
              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary-tint/50 dark:bg-primary/10 rounded-full blur-3xl -z-10"></div>
              <img src="https://images.unsplash.com/photo-1528183429752-a97d0bf99b5a?q=80&w=1000&auto=format&fit=crop" className="absolute top-20 -right-20 w-64 h-64 rounded-lg object-cover opacity-20 dark:opacity-10 -z-10 rotate-12" alt="Farming Background" />
-
              <PhoneMockup alignRight>
                  <div className="px-5">
                      <div className="flex justify-between items-center mb-6">
@@ -101,8 +202,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile" />
                          </div>
                      </div>
-
-                     {/* Weather Card */}
                      <div className="bg-white p-4 rounded-md shadow-sm mb-4 border border-border">
                          <div className="flex items-center gap-2 text-muted-foreground mb-2">
                              <MapPin size={12} />
@@ -130,14 +229,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                              </div>
                          </div>
                      </div>
-
-                     {/* List Section */}
                      <div className="flex justify-between items-end mb-3">
                          <h4 className="font-bold text-slate-900 text-sm">Our Agriculture Field</h4>
                          <span className="text-[10px] font-bold text-primary cursor-pointer">See All</span>
                      </div>
-
-                     {/* List Items */}
                      <div className="space-y-3">
                          <div className="bg-white p-3 rounded-md shadow-sm border border-border flex gap-3">
                              <div className="w-16 h-16 rounded-md bg-slate-200 overflow-hidden flex-shrink-0">
@@ -186,8 +281,93 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
         </div>
       </section>
 
-      {/* 2. FEATURES SECTION */}
+      {/* 2. WHAT IS RWANDABEYOND — System Overview */}
       <section className="py-20 lg:py-32 bg-white dark:bg-card">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+              <Satellite size={14} />
+              System Overview
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">What is RwandaBeyond?</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              RwandaBeyond is an integrated smart agriculture platform that combines IoT sensors, artificial intelligence, and mobile technology to help smallholder farmers in Rwanda make data-driven decisions — increasing yields, reducing costs, and building climate resilience.
+            </p>
+          </div>
+
+          <SystemDiagram />
+
+          <div className="grid md:grid-cols-3 gap-6 mt-12">
+            <div className="bg-primary-tint rounded-lg p-6 border border-primary/10">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">IoT-Powered Monitoring</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Solar-powered sensors placed in fields collect real-time data on soil moisture, temperature, humidity, nutrient levels (NPK), rainfall, and light intensity — transmitting wirelessly to the cloud.</p>
+            </div>
+            <div className="bg-accent-tint rounded-lg p-6 border border-accent/10">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">AI-Driven Insights</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Machine learning models analyze sensor data, weather forecasts, and historical patterns to generate actionable recommendations for irrigation, fertilization, and pest management.</p>
+            </div>
+            <div className="bg-info-tint rounded-lg p-6 border border-info/10">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2">Accessible Technology</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">Farmer-friendly interfaces including a web dashboard, mobile app, USSD codes for feature phones, and a voice assistant that speaks Kinyarwanda — ensuring no farmer is left behind.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. WHAT IT DOES — Monitoring Grid */}
+      <section className="py-20 lg:py-32 bg-background dark:bg-muted">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent-tint text-accent rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+              <BarChart3 size={14} />
+              What We Monitor
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">What Does RwandaBeyond Track?</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Eight critical data points continuously monitored in your field to give you complete visibility of crop conditions.
+            </p>
+          </div>
+
+          <MonitoringGrid />
+        </div>
+      </section>
+
+      {/* 4. HOW IT WORKS — Data Flow */}
+      <section className="py-20 lg:py-32 bg-white dark:bg-card">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-info-tint text-info rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+              <Zap size={14} />
+              How It Works
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">From Soil to Smartphone</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              A five-step automated pipeline turns raw field data into actionable farming recommendations — delivered in real-time.
+            </p>
+          </div>
+
+          <DataFlowDiagram />
+
+          <div className="grid md:grid-cols-5 gap-4 mt-12">
+            {[
+              { step: '01', title: 'Sense', desc: 'IoT probes in the field collect soil and climate data every 15 minutes' },
+              { step: '02', title: 'Transmit', desc: 'Data sent via LoRaWAN or GSM to the cloud platform' },
+              { step: '03', title: 'Analyze', desc: 'AI models process data against crop models and weather forecasts' },
+              { step: '04', title: 'Advise', desc: 'Actionable recommendations pushed to farmer\'s phone' },
+              { step: '05', title: 'Act', desc: 'Farmer irrigates, fertilizes, or treats pests based on guidance' },
+            ].map((s) => (
+              <div key={s.step} className="bg-muted rounded-lg p-5 border border-border">
+                <span className="text-xs font-bold text-primary mb-2 block">{s.step}</span>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white mb-1">{s.title}</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. FEATURES SECTION — What It Does */}
+      <section className="py-20 lg:py-32 bg-background dark:bg-muted">
           <div className="max-w-7xl mx-auto px-6">
               <div className="text-center max-w-3xl mx-auto mb-24">
                   <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-6">{t.featuresTitle}</h2>
@@ -255,22 +435,50 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                       <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                           {t.aiDesc}
                       </p>
+                      <div className="space-y-4 mb-8">
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Analyzes soil moisture trends and predicts irrigation needs 24 hours ahead</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Detects pest risks early using weather patterns and historical data</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Provides crop yield forecasts based on current conditions and growth stage</p>
+                          </div>
+                      </div>
                       <button onClick={() => onNavigate('features')} className="flex items-center gap-2 font-bold text-primary hover:underline">
                           Learn More <ArrowUpRight size={18} />
                       </button>
                   </div>
               </div>
 
-              {/* Feature Block 2: Precision Ag */}
-              <div className="grid lg:grid-cols-2 gap-16 items-center">
+              {/* Feature Block 2: Precision Agriculture */}
+              <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
                   <div>
                       <div className="inline-block px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
-                          Agri Optimization
+                          Precision Agriculture
                       </div>
                       <h3 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">{t.precisionTitle}</h3>
                       <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                           {t.precisionDesc}
                       </p>
+                      <div className="space-y-4 mb-8">
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Zone-specific management: each block gets its own irrigation and fertilization plan</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Reduces water waste by up to 40% through precision scheduling</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Optimizes fertilizer use with soil-level NPK monitoring and recommendations</p>
+                          </div>
+                      </div>
                       <button onClick={() => onNavigate('features')} className="flex items-center gap-2 font-bold text-primary hover:underline">
                           Learn More <ArrowUpRight size={18} />
                       </button>
@@ -280,7 +488,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                        <PhoneMockup alignRight>
                            <div className="h-full bg-slate-800 relative">
                                <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Satellite Field" />
-                               {/* Overlay UI */}
                                <div className="absolute top-6 left-4 right-4 flex justify-between">
                                    <div className="bg-white/90 backdrop-blur rounded-md w-8 h-8 flex items-center justify-center">
                                        <ArrowRight className="rotate-180" size={16} />
@@ -289,12 +496,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                                        Satellite View
                                    </div>
                                </div>
-
-                               {/* Field Grid Overlay */}
                                <div className="absolute top-1/3 left-10 w-32 h-40 border-2 border-white/50 rounded-md bg-success/20 backdrop-blur-sm flex items-center justify-center">
                                    <span className="text-white font-bold text-xs drop-shadow-md">Block A <br/> 92% Health</span>
                                </div>
-
                                <div className="absolute bottom-6 left-4 right-4 bg-white p-4 rounded-md shadow-xl">
                                    <div className="flex justify-between items-center mb-3">
                                        <h5 className="font-bold text-sm">Strawberry Field E-BAL</h5>
@@ -320,10 +524,72 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                   </div>
               </div>
 
+              {/* Feature Block 3: Pest & Disease Management */}
+              <div className="grid lg:grid-cols-2 gap-16 items-center">
+                  <div className="order-2 lg:order-1 relative">
+                      <PhoneMockup>
+                          <div className="px-5 pt-4">
+                              <div className="flex items-center gap-2 mb-6 border-b border-border pb-4">
+                                  <ArrowRight className="rotate-180 text-slate-900" size={20} />
+                                  <h4 className="font-bold text-slate-900 flex-1 text-center">Pest Detection</h4>
+                                  <div className="w-5"></div>
+                              </div>
+                              <div className="space-y-4">
+                                  <div className="bg-white p-4 rounded-md border border-border">
+                                      <div className="flex items-center gap-2 mb-3">
+                                          <Bug size={16} className="text-danger" />
+                                          <span className="font-bold text-sm">Fall Armyworm Detected</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mb-3">AI analysis of field photo identified pest presence in Block B</p>
+                                      <div className="bg-danger-tint text-danger text-xs p-2 rounded-sm font-medium">
+                                          Severity: Moderate | Confidence: 94%
+                                      </div>
+                                  </div>
+                                  <div className="bg-white p-4 rounded-md border border-border">
+                                      <p className="text-[10px] text-muted-foreground font-bold uppercase mb-2">Recommended Treatment</p>
+                                      <div className="space-y-2">
+                                          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-sm">
+                                              <div className="w-4 h-4 rounded-sm border border-slate-300"></div>
+                                              <span className="text-xs font-medium text-slate-700">Apply biopesticide (Bt-based)</span>
+                                          </div>
+                                          <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-sm">
+                                              <div className="w-4 h-4 rounded-sm border border-slate-300"></div>
+                                              <span className="text-xs font-medium text-slate-700">Monitor traps daily for 7 days</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </PhoneMockup>
+                  </div>
+                  <div className="order-1 lg:order-2">
+                      <div className="inline-block px-3 py-1.5 bg-danger-tint text-danger rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+                          Pest & Disease
+                      </div>
+                      <h3 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Early Pest Detection & Treatment</h3>
+                      <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                          Upload a photo of your crop and our AI instantly identifies pests and diseases, recommends treatments, and connects you with agricultural experts for confirmation.
+                      </p>
+                      <div className="space-y-4 mb-8">
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Image recognition identifies 15+ common crop pests and diseases</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Instant treatment recommendations with product and dosage guidance</p>
+                          </div>
+                          <div className="flex items-start gap-3">
+                              <CheckCircle2 className="text-success shrink-0 mt-0.5" size={20} />
+                              <p className="text-sm text-muted-foreground">Expert review workflow ensures accurate diagnosis and treatment plans</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
       </section>
 
-      {/* 3. HOW IT WORKS SECTION */}
+      {/* 6. HOW IT WORKS SECTION */}
       <section className="py-20 bg-white dark:bg-card border-t border-border">
           <div className="max-w-7xl mx-auto px-6">
               <div className="text-center mb-16">
@@ -332,10 +598,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
               </div>
 
               <div className="grid md:grid-cols-3 gap-8 relative">
-                  {/* Connector Line (Desktop) */}
                   <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 w-2/3 mx-auto z-0"></div>
-
-                  {/* Step 1 */}
                   <div className="relative z-10 flex flex-col items-center text-center">
                       <div className="w-20 h-20 bg-white dark:bg-card border-2 border-primary/20 rounded-md flex items-center justify-center mb-6 shadow-sm">
                           <div className="w-14 h-14 bg-primary-tint rounded-md flex items-center justify-center text-primary">
@@ -346,8 +609,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{t.step1Title}</h3>
                       <p className="text-muted-foreground text-sm leading-relaxed px-4">{t.step1Desc}</p>
                   </div>
-
-                  {/* Step 2 */}
                   <div className="relative z-10 flex flex-col items-center text-center">
                       <div className="w-20 h-20 bg-white dark:bg-card border-2 border-primary/20 rounded-md flex items-center justify-center mb-6 shadow-sm">
                           <div className="w-14 h-14 bg-primary-tint rounded-md flex items-center justify-center text-primary">
@@ -358,8 +619,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{t.step2Title}</h3>
                       <p className="text-muted-foreground text-sm leading-relaxed px-4">{t.step2Desc}</p>
                   </div>
-
-                  {/* Step 3 */}
                   <div className="relative z-10 flex flex-col items-center text-center">
                       <div className="w-20 h-20 bg-white dark:bg-card border-2 border-primary/20 rounded-md flex items-center justify-center mb-6 shadow-sm">
                           <div className="w-14 h-14 bg-primary-tint rounded-md flex items-center justify-center text-primary">
@@ -374,7 +633,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
           </div>
       </section>
 
-      {/* 4. REGENERATION STATS */}
+      {/* 7. STATS SECTION */}
       <section className="py-20 bg-background dark:bg-muted">
           <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
               <div className="relative h-[600px] rounded-lg overflow-hidden shadow-2xl">
@@ -394,7 +653,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                   <button onClick={() => onNavigate('features')} className="px-6 py-3 bg-primary text-white rounded-md font-bold text-sm mb-16 hover:bg-primary-hover transition-colors">
                       Explore Cases
                   </button>
-
                   <div className="grid grid-cols-3 gap-8">
                       <div className="border-r border-border pr-6">
                           <h3 className="text-4xl font-bold text-primary mb-2">{t.stat1}</h3>
@@ -413,19 +671,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
           </div>
       </section>
 
-      {/* 5. TESTIMONIALS SECTION */}
+      {/* 8. TESTIMONIALS */}
       <section className="py-24 bg-primary relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-
           <div className="max-w-7xl mx-auto px-6 relative z-10">
               <div className="text-center mb-16">
                   <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">{t.testimonialsTitle}</h2>
                   <p className="text-primary-tint max-w-2xl mx-auto">{t.testimonialsSub}</p>
               </div>
-
               <div className="grid md:grid-cols-3 gap-6">
-                  {/* Testimonial 1 */}
                   <div className="bg-primary-hover p-8 rounded-md border border-white/5 relative group hover:-translate-y-2 transition-transform duration-300">
                       <Quote className="text-accent/20 absolute top-6 right-6" size={48} />
                       <p className="text-primary-tint text-lg leading-relaxed mb-8 relative z-10">"{t.test1Quote}"</p>
@@ -437,8 +692,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                           </div>
                       </div>
                   </div>
-
-                  {/* Testimonial 2 */}
                   <div className="bg-primary-hover p-8 rounded-md border border-white/5 relative group hover:-translate-y-2 transition-transform duration-300">
                       <Quote className="text-accent/20 absolute top-6 right-6" size={48} />
                       <p className="text-primary-tint text-lg leading-relaxed mb-8 relative z-10">"{t.test2Quote}"</p>
@@ -450,8 +703,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
                           </div>
                       </div>
                   </div>
-
-                  {/* Testimonial 3 */}
                   <div className="bg-primary-hover p-8 rounded-md border border-white/5 relative group hover:-translate-y-2 transition-transform duration-300">
                       <Quote className="text-accent/20 absolute top-6 right-6" size={48} />
                       <p className="text-primary-tint text-lg leading-relaxed mb-8 relative z-10">"{t.test3Quote}"</p>
@@ -467,7 +718,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onNavigate, l
           </div>
       </section>
 
-      {/* 6. FOOTER CTA */}
+      {/* 9. FOOTER CTA */}
       <section className="relative h-[500px] flex items-center justify-center text-center px-6">
           <div className="absolute inset-0 bg-black">
               <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2000&auto=format&fit=crop" className="w-full h-full object-cover opacity-40" alt="Field" />

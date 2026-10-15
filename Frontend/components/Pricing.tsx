@@ -10,90 +10,85 @@ export const Pricing: React.FC = () => {
     staleTime: 60 * 1000,
   });
 
-  const hero = data?.data?.hero || {};
-  const plans = data?.data?.plans || [];
-  const footnote = data?.data?.footnote || '';
+  const hero = (data?.data as any)?.hero || {};
+  const plans = (data?.data as any)?.plans || [];
+  const faq = (data?.data as any)?.faq || [];
 
   return (
-    <div className="bg-[#FAFAF9] dark:bg-slate-900 min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <div className="bg-background dark:bg-background min-h-screen pt-24 pb-20 animate-fade-in font-sans text-slate-800 dark:text-white transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 text-[#0F5132] dark:text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6">
-            {hero.badge || 'Plans'}
+        <div className="text-center max-w-4xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-tint text-primary rounded-md text-xs font-bold uppercase tracking-wider mb-6">
+            {hero.badge || 'Pricing'}
           </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-            {hero.title}
+          <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-8 leading-[1.1] tracking-tight">
+            {hero.title || 'Simple, Transparent Pricing'}
           </h1>
-          <p className="text-xl text-slate-500 dark:text-slate-400 leading-relaxed">
-            {hero.subtitle}
+          <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            {hero.subtitle || 'Choose the plan that fits your farm. All plans include access to the IoT platform, AI insights, and mobile apps.'}
           </p>
         </div>
 
-        {isLoading && <div className="text-center text-slate-500 dark:text-slate-400 mb-8">Loading pricing...</div>}
+        {isLoading && <div className="text-center text-muted-foreground mb-8">Loading pricing...</div>}
         {isError && (
           <div className="text-center mb-8">
-            <p className="text-red-500 mb-3">Failed to load pricing content.</p>
-            <button onClick={() => refetch()} className="px-4 py-2 rounded-full bg-[#0F5132] text-white text-sm font-bold">
+            <p className="text-danger mb-3">Failed to load pricing content.</p>
+            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">
               Retry
             </button>
           </div>
         )}
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-start">
-          {plans.map((plan, idx) => (
-            <div
-              key={plan.id || `${plan.name}-${idx}`}
-              className={`rounded-[2.5rem] p-8 lg:p-10 border shadow-sm transition-all duration-300 ${
-                plan.featured
-                  ? 'bg-[#0F5132] text-white border-[#0F5132] shadow-2xl'
-                  : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 hover:shadow-xl'
-              }`}
-            >
-              {plan.badge && (
-                <span className={`text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider ${plan.featured ? 'bg-white/10 text-emerald-200 border border-white/10' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
-                  {plan.badge}
-                </span>
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          {plans.map((plan: any, idx: number) => (
+            <div key={plan.id || idx} className={`bg-white dark:bg-card rounded-lg p-8 border shadow-sm ${plan.featured ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}>
+              {plan.featured && (
+                <span className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-sm mb-4">Most Popular</span>
               )}
-
-              <h3 className={`text-2xl font-bold mt-4 mb-2 ${plan.featured ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.name}</h3>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className={`text-5xl font-bold tracking-tight ${plan.featured ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.price}</span>
-                {plan.period && <span className={plan.featured ? 'text-emerald-200' : 'text-slate-500 dark:text-slate-400'}>{plan.period}</span>}
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{plan.name}</h3>
+              <p className="text-muted-foreground mb-6">{plan.description}</p>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">{plan.price}</span>
+                <span className="text-muted-foreground">/month</span>
               </div>
-              <p className={`text-sm mb-8 leading-relaxed ${plan.featured ? 'text-emerald-100/90' : 'text-slate-500 dark:text-slate-400'}`}>{plan.description}</p>
-
-              <div className={`h-px w-full mb-8 ${plan.featured ? 'bg-white/10' : 'bg-slate-100 dark:bg-slate-700'}`}></div>
-
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((item, i) => (
-                  <li key={`${item}-${i}`} className={`flex items-start gap-3 text-sm font-medium ${plan.featured ? 'text-emerald-50' : 'text-slate-600 dark:text-slate-300'}`}>
-                    <div className={`rounded-full p-0.5 mt-0.5 ${plan.featured ? 'bg-[#10B981] text-black' : 'bg-emerald-50 dark:bg-emerald-900/30'}`}>
-                      <Check size={12} className={plan.featured ? '' : 'text-[#0F5132] dark:text-emerald-400'} />
-                    </div>
-                    {item}
+              <ul className="space-y-3 mb-8">
+                {(plan.features || []).map((feature: string, i: number) => (
+                  <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Check size={16} className="text-primary shrink-0" />
+                    {feature}
                   </li>
                 ))}
               </ul>
-
-              <button className={`w-full py-4 rounded-full font-bold transition-colors ${
+              <button className={`w-full py-3 rounded-md font-bold transition-colors ${
                 plan.featured
-                  ? 'bg-white text-[#0F5132] hover:bg-emerald-50 shadow-lg'
-                  : 'border-2 border-slate-100 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700'
+                  ? 'bg-primary text-white hover:bg-primary-hover'
+                  : 'bg-white text-primary border border-primary hover:bg-primary/5'
               }`}>
-                {plan.cta || 'Select Plan'}
+                {plan.button || 'Get Started'}
               </button>
             </div>
           ))}
         </div>
 
-        {footnote && (
-          <div className="mt-20 text-center">
-            <p className="text-slate-400 text-sm font-medium">{footnote}</p>
+        {faq.length > 0 && (
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {faq.map((item: any, idx: number) => (
+                <details key={idx} className="bg-white dark:bg-card rounded-lg border border-border p-5 group">
+                  <summary className="font-semibold text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+                    {item.question}
+                    <span className="text-muted-foreground group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
         )}
 
         {!isLoading && !isError && plans.length === 0 && (
-          <div className="mt-10 text-center text-slate-500 dark:text-slate-400">No pricing plans configured yet.</div>
+          <div className="text-center text-muted-foreground">No pricing content configured yet.</div>
         )}
       </div>
     </div>
