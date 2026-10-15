@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Language, translations } from '../utils/translations';
 import { contentService } from '../services/content';
 
@@ -9,7 +9,6 @@ interface FAQProps {
 }
 
 export const FAQ: React.FC<FAQProps> = ({ language = 'en' }) => {
-  const t = translations[language]?.faq || {};
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -18,6 +17,7 @@ export const FAQ: React.FC<FAQProps> = ({ language = 'en' }) => {
     queryKey: ['content', 'faq'],
     queryFn: () => contentService.getFAQ(),
     staleTime: 60 * 1000,
+    retry: false,
   });
 
   const hero = (data?.data as any)?.hero || {};
@@ -45,7 +45,6 @@ export const FAQ: React.FC<FAQProps> = ({ language = 'en' }) => {
           </p>
         </div>
 
-        {/* Search */}
         <div className="mb-8">
           <input
             type="text"
@@ -56,8 +55,30 @@ export const FAQ: React.FC<FAQProps> = ({ language = 'en' }) => {
           />
         </div>
 
-        {/* Categories */}
-        {categories.length > 0 && (
+        {isLoading && !isError && (
+          <div className="text-center py-16">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading FAQ...</p>
+          </div>
+        )}
+
+        {isError && (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-danger-tint rounded-md flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="text-danger" size={32} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Content Server Unavailable</h3>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              The backend server is not running. Start the backend server and click retry to load FAQ content.
+            </p>
+            <button onClick={() => refetch()} className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-md font-medium hover:bg-primary-hover transition-colors">
+              <RefreshCw size={16} />
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !isError && categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setSelectedCategory(null)}
@@ -77,44 +98,44 @@ export const FAQ: React.FC<FAQProps> = ({ language = 'en' }) => {
           </div>
         )}
 
-        {isLoading && <div className="text-center text-muted-foreground">Loading FAQ...</div>}
-        {isError && (
-          <div className="text-center">
-            <p className="text-danger mb-3">Failed to load FAQ content.</p>
-            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">Retry</button>
+        {!isLoading && !isError && items.length > 0 && (
+          <div className="space-y-3">
+            {filteredItems.map((item: any, idx: number) => (
+              <div key={item.id || idx} className="bg-white dark:bg-card rounded-md border border-border overflow-hidden">
+                <button
+                  onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+                  className="w-full flex items-center justify-between gap-4 p-5 text-left"
+                >
+                  <span className="font-semibold text-slate-900 dark:text-white">{item.question}</span>
+                  <ChevronDown size={20} className={`text-muted-foreground shrink-0 transition-transform ${openIndex === idx ? 'rotate-180' : ''}`} />
+                </button>
+                {openIndex === idx && (
+                  <div className="px-5 pb-5">
+                    <p className="text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         )}
 
-        {/* FAQ Items */}
-        <div className="space-y-3">
-          {filteredItems.map((item: any, idx: number) => (
-            <div key={item.id || idx} className="bg-white dark:bg-card rounded-md border border-border overflow-hidden">
-              <button
-                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                className="w-full flex items-center justify-between gap-4 p-5 text-left"
-              >
-                <span className="font-semibold text-slate-900 dark:text-white">{item.question}</span>
-                <ChevronDown size={20} className={`text-muted-foreground shrink-0 transition-transform ${openIndex === idx ? 'rotate-180' : ''}`} />
-              </button>
-              {openIndex === idx && (
-                <div className="px-5 pb-5">
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {!isLoading && !isError && items.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No FAQ content available yet.</p>
+          </div>
+        )}
 
-        {/* Still have questions CTA */}
-        <div className="mt-16 bg-primary rounded-lg p-10 md:p-16 text-center text-white relative overflow-hidden">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Still Have Questions?</h2>
-          <p className="text-primary-tint mb-8 max-w-lg mx-auto">
-            Can't find the answer you're looking for? Our team is here to help you get the most out of RwandaBeyond.
-          </p>
-          <button className="px-8 py-4 bg-white text-primary rounded-md font-bold hover:bg-slate-50 transition-colors shadow-lg">
-            Contact Support
-          </button>
-        </div>
+        {!isLoading && !isError && items.length > 0 && (
+          <div className="mt-16 bg-primary rounded-lg p-10 md:p-16 text-center text-white relative overflow-hidden">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Still Have Questions?</h2>
+            <p className="text-primary-tint mb-8 max-w-lg mx-auto">
+              Can't find the answer you're looking for? Our team is here to help you get the most out of RwandaBeyond.
+            </p>
+            <button className="px-8 py-4 bg-white text-primary rounded-md font-bold hover:bg-slate-50 transition-colors shadow-lg">
+              Contact Support
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

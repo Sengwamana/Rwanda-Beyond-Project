@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { FileText, Video, BookOpen, ArrowRight } from 'lucide-react';
+import { FileText, Video, BookOpen, ArrowRight, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Language, translations } from '../utils/translations';
 import { contentService } from '../services/content';
 
@@ -23,6 +23,7 @@ export const Resources: React.FC<ResourcesProps> = ({ language = 'en' }) => {
     queryKey: ['content', 'resources'],
     queryFn: () => contentService.getResources(),
     staleTime: 60 * 1000,
+    retry: false,
   });
 
   const hero = (data?.data as any)?.hero || {};
@@ -50,7 +51,6 @@ export const Resources: React.FC<ResourcesProps> = ({ language = 'en' }) => {
           </p>
         </div>
 
-        {/* Search */}
         <div className="max-w-xl mx-auto mb-8">
           <input
             type="text"
@@ -61,8 +61,30 @@ export const Resources: React.FC<ResourcesProps> = ({ language = 'en' }) => {
           />
         </div>
 
-        {/* Categories */}
-        {categories.length > 0 && (
+        {isLoading && !isError && (
+          <div className="text-center py-16">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading resources...</p>
+          </div>
+        )}
+
+        {isError && (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-danger-tint rounded-md flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="text-danger" size={32} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Content Server Unavailable</h3>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              The backend server is not running. Start the backend server and click retry to load resources.
+            </p>
+            <button onClick={() => refetch()} className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-md font-medium hover:bg-primary-hover transition-colors">
+              <RefreshCw size={16} />
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !isError && categories.length > 0 && (
           <div className="flex flex-wrap justify-center gap-2 mb-12">
             <button
               onClick={() => setActiveCategory(null)}
@@ -82,41 +104,34 @@ export const Resources: React.FC<ResourcesProps> = ({ language = 'en' }) => {
           </div>
         )}
 
-        {isLoading && <div className="text-center text-muted-foreground">Loading resources...</div>}
-        {isError && (
-          <div className="text-center">
-            <p className="text-danger mb-3">Failed to load resources.</p>
-            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">Retry</button>
+        {!isLoading && !isError && items.length > 0 && (
+          <div className="grid md:grid-cols-3 gap-6">
+            {filteredItems.map((item: any, idx: number) => {
+              const typeKey = String(item.type || '').toLowerCase();
+              const TypeIcon = typeIcons[typeKey] || FileText;
+              return (
+                <div key={item.id || idx} className="bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 group">
+                  {item.image && (
+                    <div className="h-48 overflow-hidden">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <TypeIcon size={16} className="text-primary" />
+                      <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.type || 'Article'}</span>
+                    </div>
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors leading-tight">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+                    <button className="flex items-center gap-1 text-sm font-bold text-primary hover:gap-2 transition-all">
+                      Read More <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-
-        {/* Resource Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {filteredItems.map((item: any, idx: number) => {
-            const typeKey = String(item.type || '').toLowerCase();
-            const TypeIcon = typeIcons[typeKey] || FileText;
-            return (
-              <div key={item.id || idx} className="bg-white dark:bg-card rounded-lg border border-border overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 group">
-                {item.image && (
-                  <div className="h-48 overflow-hidden">
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                )}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <TypeIcon size={16} className="text-primary" />
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.type || 'Article'}</span>
-                  </div>
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors leading-tight">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
-                  <button className="flex items-center gap-1 text-sm font-bold text-primary hover:gap-2 transition-all">
-                    Read More <ArrowRight size={16} />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
 
         {!isLoading && !isError && items.length === 0 && (
           <div className="text-center py-12">

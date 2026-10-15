@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Clock, ArrowRight, AlertTriangle, RefreshCw } from 'lucide-react';
 import { Language, translations } from '../utils/translations';
 import { contentService } from '../services/content';
 
@@ -24,6 +24,7 @@ export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
     queryKey: ['content', 'careers'],
     queryFn: () => contentService.getCareers(),
     staleTime: 60 * 1000,
+    retry: false,
   });
 
   const hero = (data?.data as any)?.hero || {};
@@ -50,8 +51,30 @@ export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
           </p>
         </div>
 
-        {/* Benefits */}
-        {benefits.length > 0 && (
+        {isLoading && !isError && (
+          <div className="text-center py-16">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading careers...</p>
+          </div>
+        )}
+
+        {isError && (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-danger-tint rounded-md flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="text-danger" size={32} />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Content Server Unavailable</h3>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              The backend server is not running. Start the backend server and click retry to load careers.
+            </p>
+            <button onClick={() => refetch()} className="inline-flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-md font-medium hover:bg-primary-hover transition-colors">
+              <RefreshCw size={16} />
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!isLoading && !isError && benefits.length > 0 && (
           <div className="grid md:grid-cols-4 gap-4 mb-16">
             {benefits.map((benefit: any, idx: number) => (
               <div key={idx} className="bg-white dark:bg-card rounded-lg p-5 border border-border shadow-sm text-center">
@@ -62,16 +85,7 @@ export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
           </div>
         )}
 
-        {isLoading && <div className="text-center text-muted-foreground">Loading careers...</div>}
-        {isError && (
-          <div className="text-center">
-            <p className="text-danger mb-3">Failed to load careers content.</p>
-            <button onClick={() => refetch()} className="px-4 py-2 rounded-md bg-primary text-white text-sm font-bold">Retry</button>
-          </div>
-        )}
-
-        {/* Department Filter */}
-        {departments.length > 0 && (
+        {!isLoading && !isError && departments.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             <button
               onClick={() => setSelectedDepartment(null)}
@@ -91,41 +105,42 @@ export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
           </div>
         )}
 
-        {/* Job Listings */}
-        <div className="space-y-4">
-          {filteredJobs.map((job: any, idx: number) => (
-            <div key={job.id || idx} className="bg-white dark:bg-card rounded-lg border border-border p-6 hover:shadow-md transition-all duration-200 group">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors">{job.title}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{job.description}</p>
-                  <div className="flex flex-wrap items-center gap-3 mt-3">
-                    {job.department && (
-                      <span className={`text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider ${departmentColors[job.department.toLowerCase()] || 'bg-muted text-muted-foreground'}`}>
-                        {job.department}
-                      </span>
-                    )}
-                    {job.location && (
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin size={12} />
-                        {job.location}
-                      </span>
-                    )}
-                    {job.type && (
-                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock size={12} />
-                        {job.type}
-                      </span>
-                    )}
+        {!isLoading && !isError && jobs.length > 0 && (
+          <div className="space-y-4">
+            {filteredJobs.map((job: any, idx: number) => (
+              <div key={job.id || idx} className="bg-white dark:bg-card rounded-lg border border-border p-6 hover:shadow-md transition-all duration-200 group">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white group-hover:text-primary transition-colors">{job.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{job.description}</p>
+                    <div className="flex flex-wrap items-center gap-3 mt-3">
+                      {job.department && (
+                        <span className={`text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider ${departmentColors[job.department.toLowerCase()] || 'bg-muted text-muted-foreground'}`}>
+                          {job.department}
+                        </span>
+                      )}
+                      {job.location && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin size={12} />
+                          {job.location}
+                        </span>
+                      )}
+                      {job.type && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock size={12} />
+                          {job.type}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-card border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm rounded-md hover:bg-primary hover:text-white hover:border-primary transition-colors group shrink-0">
+                    Apply Now <ArrowRight size={16} />
+                  </button>
                 </div>
-                <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-card border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm rounded-md hover:bg-primary hover:text-white hover:border-primary transition-colors group">
-                  Apply Now <ArrowRight size={16} />
-                </button>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {!isLoading && !isError && jobs.length === 0 && (
           <div className="text-center py-12">
@@ -137,4 +152,3 @@ export const Careers: React.FC<CareersProps> = ({ language = 'en' }) => {
     </div>
   );
 };
-
